@@ -161,25 +161,37 @@ const counties = lazyLayer("data/counties.geojson", (gj) =>
 );
 
 /* ---------- CBSA / MSA boundaries (two vintages) ---------- */
-function makeCbsa(color) {
+function makeCbsa(color, vintage) {
   return (gj) =>
     L.geoJSON(gj, {
-      style: (f) => f.properties.kind === "non-MSA"
-        ? { color: color, weight: 1.0, dashArray: "4 3", fill: true, fillOpacity: 0.02, fillColor: color }
-        : { color: color, weight: 1.3, fill: true, fillOpacity: 0.06, fillColor: color },
+      style: (f) => {
+        const isMsa = f.properties.kind !== "non-MSA";
+        const q = f.properties.ffe_do;
+        return {
+          color: color,
+          weight: isMsa ? 1.3 : 1.0,
+          dashArray: isMsa ? null : "4 3",
+          fill: true,
+          fillColor: q ? "#1f8a70" : color,
+          fillOpacity: q ? (isMsa ? 0.5 : 0.4) : (isMsa ? 0.06 : 0.02),
+        };
+      },
       onEachFeature: (f, l) => {
         const p = f.properties;
         const isMsa = p.kind !== "non-MSA";
         const label = isMsa ? "Metropolitan Statistical Area (MSA)" : "Non-MSA area";
         const baseWeight = isMsa ? 1.3 : 1.0;
-        l.on("mouseover", (e) => { e.target.setStyle({ weight: 2.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${label}</span>`); });
+        const tag = p.ffe_do ? `${label} &mdash; qualifying FFE energy community` : label;
+        l.on("mouseover", (e) => { e.target.setStyle({ weight: 2.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${tag}</span>`); });
         l.on("mouseout", (e) => { e.target.setStyle({ weight: baseWeight }); hideHover(); });
-        l.bindPopup(`<h3>${p.NAME}</h3><div>${label}</div><div><span class="k">Area code:</span> ${p.GEOID}</div>`);
+        l.bindPopup(`<h3>${p.NAME}</h3><div>${label}</div>
+          <div><span class="k">Area code:</span> ${p.GEOID}</div>
+          <div class="elig"><span class="k">FFE energy community (${vintage}):</span> ${p.ffe_do ? '<span class="yes">&#10003; Qualifies</span>' : '<span class="no">&#10007; Not qualifying</span>'}</div>`);
       },
     });
 }
-const cbsaV1 = lazyLayer("data/cbsa_v1_2010.geojson", makeCbsa("#6a3d9a"));
-const cbsaV2 = lazyLayer("data/cbsa_v2_2020.geojson", makeCbsa("#1f6fb2"));
+const cbsaV1 = lazyLayer("data/cbsa_v1_2010.geojson", makeCbsa("#6a3d9a", "2010 / Vintage 1"));
+const cbsaV2 = lazyLayer("data/cbsa_v2_2020.geojson", makeCbsa("#1f6fb2", "2020 / Vintage 2"));
 
 /* ---------- Nuclear sites (shared loader, two display layers + table) ---------- */
 let nucData = null, nucPromise = null;
