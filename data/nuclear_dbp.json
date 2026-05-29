@@ -1,0 +1,1034 @@
+[
+ {
+  "name": "Zion Nuclear Power Station",
+  "lat": 42.4461,
+  "lon": -87.8028,
+  "status": "D",
+  "decom": "1998-02-13",
+  "comm": "--12-31"
+ },
+ {
+  "name": "Sodium Reactor Experiment",
+  "lat": 34.2353,
+  "lon": -118.7083,
+  "status": "D",
+  "decom": "1964-02-15",
+  "comm": "1957-07-12"
+ },
+ {
+  "name": "Rancho Seco Nuclear Generating Station",
+  "lat": 38.3453,
+  "lon": -121.1217,
+  "status": "D",
+  "decom": "1989-06-23",
+  "comm": "1975-04-17"
+ },
+ {
+  "name": "Callaway Nuclear Generating Station",
+  "lat": 38.7617,
+  "lon": -91.78,
+  "status": "O",
+  "decom": "",
+  "comm": "1984-12-19"
+ },
+ {
+  "name": "McGuire Nuclear Station",
+  "lat": 35.4325,
+  "lon": -80.9483,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-01"
+ },
+ {
+  "name": "Comanche Peak Nuclear Power Plant",
+  "lat": 32.2983,
+  "lon": -97.785,
+  "status": "O",
+  "decom": "",
+  "comm": "--08-13"
+ },
+ {
+  "name": "Braidwood Nuclear Generating Station",
+  "lat": 41.2436,
+  "lon": -88.2292,
+  "status": "O",
+  "decom": "",
+  "comm": "--10-17"
+ },
+ {
+  "name": "Duane Arnold Energy Center",
+  "lat": 42.1006,
+  "lon": -91.7772,
+  "status": "B",
+  "decom": "",
+  "comm": "1975-02-01"
+ },
+ {
+  "name": "Crystal River Nuclear Plant",
+  "lat": 28.9575,
+  "lon": -82.6983,
+  "status": "B",
+  "decom": "",
+  "comm": "1977-03-13"
+ },
+ {
+  "name": "Bell Bend Nuclear Power Plant",
+  "lat": 41.0833,
+  "lon": -76.15,
+  "status": "C",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Victoria County Station",
+  "lat": 28.6144,
+  "lon": -97.0306,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Galena Nuclear Power Plant",
+  "lat": 64.7406,
+  "lon": -156.8856,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Crystal River Energy Complex",
+  "lat": 28.9581,
+  "lon": -82.6997,
+  "status": "O",
+  "decom": "--02-05",
+  "comm": "--03-13"
+ },
+ {
+  "name": "Enrico Fermi Nuclear Generating Station",
+  "lat": 41.9628,
+  "lon": -83.2575,
+  "status": "O",
+  "decom": "--11-29",
+  "comm": "--08-07"
+ },
+ {
+  "name": "Kewaunee Power Station",
+  "lat": 44.3422,
+  "lon": -87.5361,
+  "status": "D",
+  "decom": "2013-05-07",
+  "comm": "1974-06-16"
+ },
+ {
+  "name": "La Crosse Boiling Water Reactor",
+  "lat": 43.5601,
+  "lon": -91.2315,
+  "status": "D",
+  "decom": "1987-04-30",
+  "comm": "1969-11-07"
+ },
+ {
+  "name": "Prairie Island Nuclear Power Plant",
+  "lat": 44.6217,
+  "lon": -92.6331,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-21"
+ },
+ {
+  "name": "R. E. Ginna Nuclear Power Plant",
+  "lat": 43.2778,
+  "lon": -77.31,
+  "status": "O",
+  "decom": "",
+  "comm": "1970-06-01"
+ },
+ {
+  "name": "Midland Cogeneration Venture",
+  "lat": 43.5861,
+  "lon": -84.2219,
+  "status": "O",
+  "decom": "",
+  "comm": "1991"
+ },
+ {
+  "name": "St. Lucie Nuclear Power Plant",
+  "lat": 27.3486,
+  "lon": -80.2464,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-21"
+ },
+ {
+  "name": "South Texas Nuclear Generating Station",
+  "lat": 28.7956,
+  "lon": -96.0489,
+  "status": "O",
+  "decom": "",
+  "comm": "--08-25"
+ },
+ {
+  "name": "H. B. Robinson Nuclear Generating Station",
+  "lat": 34.4028,
+  "lon": -80.1583,
+  "status": "O",
+  "decom": "",
+  "comm": "1971-03-07"
+ },
+ {
+  "name": "Clinton Power Station",
+  "lat": 40.1722,
+  "lon": -88.835,
+  "status": "O",
+  "decom": "",
+  "comm": "1987-11-24"
+ },
+ {
+  "name": "Salem Nuclear Power Plant",
+  "lat": 39.4628,
+  "lon": -75.5356,
+  "status": "O",
+  "decom": "",
+  "comm": "--10-13"
+ },
+ {
+  "name": "Sheldon Power Station",
+  "lat": 40.5592,
+  "lon": -96.7847,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Big Rock Point Nuclear Power Plant",
+  "lat": 45.3628,
+  "lon": -85.1756,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Cherokee Nuclear Power Plant",
+  "lat": 35.0365,
+  "lon": -81.5112,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Atlantic Nuclear Power Plant",
+  "lat": 39.5726,
+  "lon": -74.1951,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Experimental Breeder Reactor I",
+  "lat": 43.5113,
+  "lon": -113.0064,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Forked River Nuclear Power Plant",
+  "lat": 39.813,
+  "lon": -74.218,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Millstone Nuclear Power Plant",
+  "lat": 41.3105,
+  "lon": -72.1677,
+  "status": "O",
+  "decom": "--07-01",
+  "comm": "--12-26"
+ },
+ {
+  "name": "Humboldt Bay Nuclear Power Plant",
+  "lat": 40.7413,
+  "lon": -124.209,
+  "status": "D",
+  "decom": "2020-09-30",
+  "comm": "Unit 3: August 1963"
+ },
+ {
+  "name": "Saxton Nuclear Generating Station",
+  "lat": 40.2269,
+  "lon": -78.2419,
+  "status": "Decommissioned; site released for unrestricted use",
+  "decom": "May 1972",
+  "comm": "November 1961"
+ },
+ {
+  "name": "San Onofre Nuclear Generating Station",
+  "lat": 33.3689,
+  "lon": -117.555,
+  "status": "In decommissioning",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "LaSalle County Nuclear Generating Station",
+  "lat": 41.2456,
+  "lon": -88.6692,
+  "status": "O",
+  "decom": "",
+  "comm": "--10-20"
+ },
+ {
+  "name": "Susquehanna Steam Electric Station",
+  "lat": 41.0889,
+  "lon": -76.1489,
+  "status": "O",
+  "decom": "",
+  "comm": "--06-08"
+ },
+ {
+  "name": "Hartsville Nuclear Plant",
+  "lat": 36.3542,
+  "lon": -86.0858,
+  "status": "C",
+  "decom": "1984-08-29",
+  "comm": ""
+ },
+ {
+  "name": "Ravenswood Nuclear Power Plant",
+  "lat": 40.7597,
+  "lon": -73.9458,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Elk River Station",
+  "lat": 45.2952,
+  "lon": -93.5567,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Kintigh Generating Station",
+  "lat": 43.3581,
+  "lon": -78.6039,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Pathfinder Nuclear Generating Station",
+  "lat": 43.6036,
+  "lon": -96.6375,
+  "status": "D",
+  "decom": "October 1967",
+  "comm": "July 1966"
+ },
+ {
+  "name": "Wolf Creek Generating Station",
+  "lat": 38.2389,
+  "lon": -95.6889,
+  "status": "O",
+  "decom": "",
+  "comm": "1985-09-03"
+ },
+ {
+  "name": "Oconee Nuclear Station",
+  "lat": 34.7939,
+  "lon": -82.8981,
+  "status": "O",
+  "decom": "",
+  "comm": "1974-12-16"
+ },
+ {
+  "name": "Byron Nuclear Generating Station",
+  "lat": 42.0742,
+  "lon": -89.2819,
+  "status": "O",
+  "decom": "",
+  "comm": "--09-16"
+ },
+ {
+  "name": "James A. FitzPatrick Nuclear Power Plant",
+  "lat": 43.5233,
+  "lon": -76.3983,
+  "status": "O",
+  "decom": "",
+  "comm": "1975-07-28"
+ },
+ {
+  "name": "Davis–Besse Nuclear Power Station",
+  "lat": 41.5967,
+  "lon": -83.0864,
+  "status": "O",
+  "decom": "",
+  "comm": "1978-07-31"
+ },
+ {
+  "name": "Watts Bar Nuclear Plant",
+  "lat": 35.6028,
+  "lon": -84.7894,
+  "status": "O",
+  "decom": "",
+  "comm": "--10-19"
+ },
+ {
+  "name": "Sundesert Nuclear Power Plant",
+  "lat": 33.4498,
+  "lon": -114.7829,
+  "status": "C",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Montague Nuclear Power Plant",
+  "lat": 42.5761,
+  "lon": -72.5267,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "William States Lee III Nuclear Generating Station",
+  "lat": 35.0333,
+  "lon": -81.5111,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "SM-1",
+  "lat": 38.6767,
+  "lon": -77.1444,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Douglas Point Nuclear Power Plant",
+  "lat": 38.4433,
+  "lon": -77.2583,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Indian Point Energy Center",
+  "lat": 41.2697,
+  "lon": -73.9522,
+  "status": "Shutdown",
+  "decom": "--10-31",
+  "comm": "--10-01"
+ },
+ {
+  "name": "Blue Castle Project",
+  "lat": 39.0139,
+  "lon": -110.2402,
+  "status": "P",
+  "decom": "",
+  "comm": "2028"
+ },
+ {
+  "name": "Donald C. Cook Nuclear Plant",
+  "lat": 41.9756,
+  "lon": -86.5653,
+  "status": "O",
+  "decom": "",
+  "comm": "--08-28"
+ },
+ {
+  "name": "Perry Nuclear Generating Station",
+  "lat": 41.8008,
+  "lon": -81.1433,
+  "status": "O",
+  "decom": "",
+  "comm": "1987-11-18"
+ },
+ {
+  "name": "Palo Verde Nuclear Generating Station",
+  "lat": 33.3892,
+  "lon": -112.865,
+  "status": "O",
+  "decom": "",
+  "comm": "1988-01-08"
+ },
+ {
+  "name": "Turkey Point Nuclear Generating Station",
+  "lat": 25.4342,
+  "lon": -80.3306,
+  "status": "O",
+  "decom": "",
+  "comm": "Unit 5: May 2007"
+ },
+ {
+  "name": "Vermont Yankee Nuclear Power Plant",
+  "lat": 42.7789,
+  "lon": -72.5131,
+  "status": "--12-29",
+  "decom": "",
+  "comm": "1972-11-30"
+ },
+ {
+  "name": "Shearon Harris Nuclear Power Plant",
+  "lat": 35.6333,
+  "lon": -78.955,
+  "status": "O",
+  "decom": "",
+  "comm": "1987-05-02"
+ },
+ {
+  "name": "Washington Xe-100 reactor site",
+  "lat": 46.466,
+  "lon": -119.313,
+  "status": "P",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Experimental Breeder Reactor II",
+  "lat": 43.595,
+  "lon": -112.6572,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Vallecitos Nuclear Center",
+  "lat": 37.6133,
+  "lon": -121.8402,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Black Fox Nuclear Power Plant",
+  "lat": 36.1158,
+  "lon": -95.5516,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "SL-1",
+  "lat": 43.5182,
+  "lon": -112.8237,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Palisades Nuclear Generating Station",
+  "lat": 42.3228,
+  "lon": -86.3144,
+  "status": "Operational",
+  "decom": "2022-05-20",
+  "comm": "1971-12-29"
+ },
+ {
+  "name": "Quad Cities Nuclear Generating Station",
+  "lat": 41.7264,
+  "lon": -90.31,
+  "status": "O",
+  "decom": "",
+  "comm": "--03-10"
+ },
+ {
+  "name": "Nine Mile Point Nuclear Generating Station",
+  "lat": 43.5208,
+  "lon": -76.4069,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-01"
+ },
+ {
+  "name": "Vogtle Electric Generating Plant",
+  "lat": 33.1433,
+  "lon": -81.7606,
+  "status": "O",
+  "decom": "",
+  "comm": "--07-31"
+ },
+ {
+  "name": "Edwin I. Hatch Nuclear Power Plant",
+  "lat": 31.9342,
+  "lon": -82.3439,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-31"
+ },
+ {
+  "name": "Bellefonte Nuclear Plant",
+  "lat": 34.7086,
+  "lon": -85.9292,
+  "status": "Suspended for",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Clinch River Breeder Reactor Project",
+  "lat": 35.89,
+  "lon": -84.3825,
+  "status": "C",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Alan R. Barton Plant",
+  "lat": 32.75,
+  "lon": -86.4,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Connecticut Yankee Nuclear Power Plant",
+  "lat": 41.4822,
+  "lon": -72.4983,
+  "status": "D",
+  "decom": "1996-12-05",
+  "comm": "1968-01-01"
+ },
+ {
+  "name": "Maine Yankee Nuclear Power Plant",
+  "lat": 43.9506,
+  "lon": -69.6958,
+  "status": "D",
+  "decom": "1997-08-01",
+  "comm": "1972-12-28"
+ },
+ {
+  "name": "Oyster Creek Nuclear Generating Station",
+  "lat": 39.8147,
+  "lon": -74.205,
+  "status": "B",
+  "decom": "2018-09-17",
+  "comm": "1969-12-23"
+ },
+ {
+  "name": "Grand Gulf Nuclear Station",
+  "lat": 32.0072,
+  "lon": -91.0478,
+  "status": "O",
+  "decom": "",
+  "comm": "1985-07-01"
+ },
+ {
+  "name": "Brunswick Nuclear Generating Station",
+  "lat": 33.9583,
+  "lon": -78.0103,
+  "status": "O",
+  "decom": "",
+  "comm": "--11-03"
+ },
+ {
+  "name": "Waterford Nuclear Generating Station",
+  "lat": 29.9953,
+  "lon": -90.4711,
+  "status": "O",
+  "decom": "",
+  "comm": "1985-09-24"
+ },
+ {
+  "name": "North Anna Nuclear Generating Station",
+  "lat": 38.0606,
+  "lon": -77.7894,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-14"
+ },
+ {
+  "name": "Fort Saint Vrain Nuclear Power Plant",
+  "lat": 40.2444,
+  "lon": -104.8742,
+  "status": "",
+  "decom": "1989",
+  "comm": "19791996"
+ },
+ {
+  "name": "Bodega Bay Nuclear Power Plant",
+  "lat": 38.3053,
+  "lon": -123.0589,
+  "status": "C",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Marble Hill Nuclear Power Plant",
+  "lat": 38.6009,
+  "lon": -85.4459,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Yankee Rowe Nuclear Power Station",
+  "lat": 42.7278,
+  "lon": -72.9291,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "William H. Zimmer Power Station",
+  "lat": 38.8664,
+  "lon": -84.2281,
+  "status": "Decommissioned",
+  "decom": "2022-05-31",
+  "comm": "1991"
+ },
+ {
+  "name": "Fermi 1",
+  "lat": 41.9606,
+  "lon": -83.2578,
+  "status": "Decommissioned",
+  "decom": "1975-12-31",
+  "comm": "1966-08-06"
+ },
+ {
+  "name": "Peach Bottom Nuclear Generating Station",
+  "lat": 39.7583,
+  "lon": -76.2681,
+  "status": "O",
+  "decom": "--11-01",
+  "comm": "--12-23"
+ },
+ {
+  "name": "Seabrook Station Nuclear Power Plant",
+  "lat": 42.8989,
+  "lon": -70.8508,
+  "status": "O",
+  "decom": "",
+  "comm": "1990-08-19"
+ },
+ {
+  "name": "Columbia Generating Station",
+  "lat": 46.4711,
+  "lon": -119.3339,
+  "status": "O",
+  "decom": "",
+  "comm": "1984-12-13"
+ },
+ {
+  "name": "Beaver Valley Nuclear Power Station",
+  "lat": 40.6233,
+  "lon": -80.4306,
+  "status": "O",
+  "decom": "",
+  "comm": "--11-17"
+ },
+ {
+  "name": "Cooper Nuclear Station",
+  "lat": 40.3619,
+  "lon": -95.6414,
+  "status": "O",
+  "decom": "",
+  "comm": "1974-07-01"
+ },
+ {
+  "name": "Monticello Nuclear Generating Plant",
+  "lat": 45.3336,
+  "lon": -93.8492,
+  "status": "O",
+  "decom": "",
+  "comm": "1971-06-30"
+ },
+ {
+  "name": "Piqua Nuclear Generating Station",
+  "lat": 40.1323,
+  "lon": -84.2348,
+  "status": "",
+  "decom": "1966",
+  "comm": "1963"
+ },
+ {
+  "name": "Jamesport Nuclear Power Plant",
+  "lat": 40.9914,
+  "lon": -72.5968,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Bailly Nuclear Power Plant",
+  "lat": 41.6451,
+  "lon": -87.1164,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Haven Nuclear Power Plant",
+  "lat": 43.851,
+  "lon": -87.735,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Erie Nuclear Power Plant",
+  "lat": 41.3463,
+  "lon": -82.3598,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "N-Reactor",
+  "lat": 46.6747,
+  "lon": -119.5687,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Shippingport Atomic Power Station",
+  "lat": 40.6211,
+  "lon": -80.4353,
+  "status": "D",
+  "decom": "December 1989",
+  "comm": "1958-05-26"
+ },
+ {
+  "name": "Trojan Nuclear Power Plant",
+  "lat": 46.0383,
+  "lon": -122.885,
+  "status": "Demolished",
+  "decom": "1992-11-09",
+  "comm": "1976-05-20"
+ },
+ {
+  "name": "Diablo Canyon Power Plant",
+  "lat": 35.2108,
+  "lon": -120.8561,
+  "status": "O",
+  "decom": "2030",
+  "comm": "1986-03-13"
+ },
+ {
+  "name": "Hope Creek Nuclear Generating Station",
+  "lat": 39.4678,
+  "lon": -75.5381,
+  "status": "O",
+  "decom": "",
+  "comm": "1986-12-20"
+ },
+ {
+  "name": "Limerick Generating Station",
+  "lat": 40.2267,
+  "lon": -75.5872,
+  "status": "O",
+  "decom": "",
+  "comm": "--02-01"
+ },
+ {
+  "name": "Fort Calhoun Nuclear Generating Station",
+  "lat": 41.5203,
+  "lon": -96.0772,
+  "status": "B",
+  "decom": "",
+  "comm": "1973-08-09"
+ },
+ {
+  "name": "WNP-3 and WNP-5",
+  "lat": 46.9598,
+  "lon": -123.4696,
+  "status": "C",
+  "decom": "",
+  "comm": "N/A"
+ },
+ {
+  "name": "Sequoyah Nuclear Plant",
+  "lat": 35.2264,
+  "lon": -85.0917,
+  "status": "O",
+  "decom": "",
+  "comm": "--07-01"
+ },
+ {
+  "name": "Phipps Bend Nuclear Plant",
+  "lat": 36.4669,
+  "lon": -82.8075,
+  "status": "C",
+  "decom": "1981-08-06",
+  "comm": ""
+ },
+ {
+  "name": "MH-1A",
+  "lat": 37.1314,
+  "lon": -76.6476,
+  "status": "D",
+  "decom": "2014-03-27",
+  "comm": ""
+ },
+ {
+  "name": "Pilgrim Nuclear Power Station",
+  "lat": 41.945,
+  "lon": -70.5783,
+  "status": "B",
+  "decom": "2019-05-31",
+  "comm": "1972-12-01"
+ },
+ {
+  "name": "WNP-1 and WNP-4",
+  "lat": 46.4715,
+  "lon": -119.317,
+  "status": "C",
+  "decom": "",
+  "comm": "N/A"
+ },
+ {
+  "name": "Browns Ferry Nuclear Plant",
+  "lat": 34.7039,
+  "lon": -87.1186,
+  "status": "O",
+  "decom": "",
+  "comm": "--08-01"
+ },
+ {
+  "name": "Arkansas Nuclear One",
+  "lat": 35.311,
+  "lon": -93.231,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-19"
+ },
+ {
+  "name": "Three Mile Island Nuclear Generating Station",
+  "lat": 40.1539,
+  "lon": -76.7247,
+  "status": "M",
+  "decom": "",
+  "comm": "--12-30"
+ },
+ {
+  "name": "River Bend Nuclear Generating Station",
+  "lat": 30.7567,
+  "lon": -91.3333,
+  "status": "O",
+  "decom": "",
+  "comm": "1986-06-16"
+ },
+ {
+  "name": "Point Beach Nuclear Plant",
+  "lat": 44.2811,
+  "lon": -87.5367,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-21"
+ },
+ {
+  "name": "Greene County Nuclear Power Plant",
+  "lat": 42.15,
+  "lon": -73.9114,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Yellow Creek Nuclear Plant",
+  "lat": 34.96,
+  "lon": -88.21,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Blue Hills Nuclear Power Plant",
+  "lat": 31.15,
+  "lon": -93.7,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Advanced Test Reactor",
+  "lat": 43.5858,
+  "lon": -112.9653,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Allens Creek Nuclear Power Plant",
+  "lat": 29.68,
+  "lon": -96.1,
+  "status": "",
+  "decom": "",
+  "comm": ""
+ },
+ {
+  "name": "Carolinas–Virginia Tube Reactor",
+  "lat": 34.2625,
+  "lon": -81.3292,
+  "status": "D",
+  "decom": "1967-01-10",
+  "comm": "1963-12-18"
+ },
+ {
+  "name": "Shoreham Nuclear Power Plant",
+  "lat": 40.9611,
+  "lon": -72.865,
+  "status": "D",
+  "decom": "1989-05-01",
+  "comm": "1986-08-01"
+ },
+ {
+  "name": "Dresden Generating Station",
+  "lat": 41.3897,
+  "lon": -88.2681,
+  "status": "O",
+  "decom": "--10-31",
+  "comm": "--11-16"
+ },
+ {
+  "name": "Catawba Nuclear Station",
+  "lat": 35.0517,
+  "lon": -81.07,
+  "status": "O",
+  "decom": "",
+  "comm": "--08-19"
+ },
+ {
+  "name": "Joseph M. Farley Nuclear Plant",
+  "lat": 31.2231,
+  "lon": -85.1117,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-01"
+ },
+ {
+  "name": "Calvert Cliffs Nuclear Power Plant",
+  "lat": 38.4319,
+  "lon": -76.4422,
+  "status": "O",
+  "decom": "",
+  "comm": "--05-08"
+ },
+ {
+  "name": "Surry Nuclear Power Plant",
+  "lat": 37.1656,
+  "lon": -76.6978,
+  "status": "O",
+  "decom": "",
+  "comm": "--12-22"
+ },
+ {
+  "name": "Virgil C. Summer Nuclear Generating Station",
+  "lat": 34.2986,
+  "lon": -81.3147,
+  "status": "O",
+  "decom": "",
+  "comm": "1984-01-01"
+ },
+ {
+  "name": "Levy County Nuclear Power Plant",
+  "lat": 29.0733,
+  "lon": -82.6217,
+  "status": "C",
+  "decom": "",
+  "comm": ""
+ }
+]

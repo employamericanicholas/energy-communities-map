@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>U.S. Energy Communities Map — IRA Tax Credit Bonus Eligibility</title>
+<meta name="description" content="Interactive map of IRS Energy Community eligibility: coal closure census tracts, fossil fuel employment (FFE) counties, MSA/non-MSA boundaries (2010 & 2020 OMB vintages), U.S. counties, and nuclear power plant sites." />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="map"></div>
+
+<button id="panelToggle" aria-label="Toggle layers panel">&#9776; Layers</button>
+
+<div id="panel">
+  <div class="panel-head">
+    <h1>U.S. Energy Communities Map</h1>
+    <p class="sub">IRA tax-credit bonus eligibility &amp; reference boundaries</p>
+  </div>
+
+  <div class="panel-body">
+    <section class="group">
+      <h2>Energy Community eligibility</h2>
+
+      <label class="layer"><input type="checkbox" id="lyr_coal" checked>
+        <span class="swatch" style="background:#c0532b"></span>
+        Coal closure tracts <span class="cnt" id="cnt_coal"></span></label>
+      <div class="legend-sub" id="leg_coal">
+        <span><i style="background:#7a2d12"></i>Mine closure</span>
+        <span><i style="background:#c0532b"></i>Unit retirement</span>
+        <span><i style="background:#e3a07f"></i>Adjoining tract</span>
+      </div>
+
+      <label class="layer"><input type="checkbox" id="lyr_ffe_do" checked>
+        <span class="swatch" style="background:#1f8a70"></span>
+        FFE — qualifying energy communities <span class="cnt" id="cnt_ffe_do"></span></label>
+      <p class="note">Counties meeting the Fossil Fuel Employment threshold <em>and</em> the unemployment-rate requirement (currently eligible).</p>
+
+      <label class="layer"><input type="checkbox" id="lyr_ffe_may">
+        <span class="swatch" style="background:#9cc0b6"></span>
+        FFE — meets threshold, unemployment pending <span class="cnt" id="cnt_ffe_may"></span></label>
+      <p class="note">Counties meeting the FFE threshold; unemployment requirement not yet determined.</p>
+    </section>
+
+    <section class="group">
+      <h2>Reference boundaries</h2>
+
+      <label class="layer"><input type="checkbox" id="lyr_counties">
+        <span class="swatch swatch-line" style="border-color:#555"></span>
+        U.S. counties</label>
+
+      <div class="msa-toggle">
+        <span class="msa-label">MSA / non-MSA boundaries (OMB):</span>
+        <label class="radio"><input type="radio" name="msa" id="msa_none" value="none" checked> Off</label>
+        <label class="radio"><input type="radio" name="msa" value="v1">
+          <span class="swatch swatch-line" style="border-color:#6a3d9a"></span> 2010-based (Vintage&nbsp;1)</label>
+        <label class="radio"><input type="radio" name="msa" value="v2">
+          <span class="swatch swatch-line" style="border-color:#1f6fb2"></span> 2020-based (Vintage&nbsp;2)</label>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Energy infrastructure</h2>
+      <label class="layer"><input type="checkbox" id="lyr_nuclear">
+        <span class="swatch swatch-dot" style="background:#1a9e1a"></span>
+        Nuclear power plant sites <span class="cnt" id="cnt_nuclear"></span></label>
+      <div class="legend-sub">
+        <span><i class="dot" style="background:#1a9e1a"></i>Operating</span>
+        <span><i class="dot" style="background:#999"></i>Former / shut down</span>
+      </div>
+    </section>
+
+    <section class="group sources">
+      <h2>Sources &amp; notes</h2>
+      <p>Eligibility data: <strong>IRS Notice 2025-31</strong> (and cumulative prior notices 2023-29, 2023-47, 2024-30/48). Coal eligibility is at the <em>census-tract</em> level; FFE at the <em>county</em> level.</p>
+      <p>Boundaries: U.S. Census Bureau cartographic boundary files (counties &amp; CBSAs 2020 and 2023). Nuclear sites: Wikipedia/DBpedia (operating &amp; former commercial power reactors; research, military, and never-built sites excluded).</p>
+      <p class="disclaimer">Unofficial visualization for research/educational use. Confirm eligibility against the official IRS notices and the DOE/IRS energy community mapping tool.</p>
+    </section>
+  </div>
+</div>
+
+<div id="hoverinfo" aria-hidden="true"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+  integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="app.js"></script>
+</body>
+</html>
