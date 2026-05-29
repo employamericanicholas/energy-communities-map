@@ -38,6 +38,21 @@ OWNER_OVERRIDE = {
     "Rancho Seco Nuclear Generating Station": "Sacramento Municipal Utility District (SMUD)",
     "Peach Bottom Nuclear Generating Station": "Constellation Energy",
     "Three Mile Island Nuclear Generating Station": "Constellation Energy",
+    # NRC new-reactor licensing sites (ESP / COL / advanced) added separately.
+    "Clinton ESP": "Constellation Energy",
+    "Grand Gulf ESP": "Entergy",
+    "PSEG Site (ESP)": "PSEG Nuclear",
+    "Clinch River Nuclear Site": "Tennessee Valley Authority",
+    "North Anna Unit 3": "Dominion Energy",
+    "Vogtle Units 3 & 4": "Georgia Power (Southern Company)",
+    "V.C. Summer Units 2 & 3": "Dominion Energy / Santee Cooper",
+    "Levy County Units 1 & 2": "Duke Energy Florida",
+    "William States Lee III": "Duke Energy",
+    "Turkey Point Units 6 & 7": "Florida Power & Light",
+    "Fermi Unit 3": "DTE Electric",
+    "South Texas Project Units 3 & 4": "Nuclear Innovation North America (NINA)",
+    "TerraPower Natrium (Kemmerer Unit 1)": "TerraPower / PacifiCorp",
+    "X-energy / Dow - Long Mott (Seadrift)": "X-energy / Dow (Long Mott Energy)",
 }
 
 

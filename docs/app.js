@@ -190,9 +190,11 @@ function loadNuclear() {
       .then((r) => r.json())
       .then((gj) => {
         nucData = gj;
-        const isFormer = (f) => f.properties.category === "former";
-        setCount("cnt_nuc_op", gj.features.filter((f) => !isFormer(f)).length);
-        setCount("cnt_nuc_former", gj.features.filter(isFormer).length);
+        const byCat = (c) => gj.features.filter((f) => f.properties.category === c).length;
+        setCount("cnt_nuc_op", byCat("operating"));
+        setCount("cnt_nuc_former", byCat("former"));
+        setCount("cnt_nuc_esp_col", byCat("esp_col"));
+        setCount("cnt_nuc_advanced", byCat("advanced"));
         return gj;
       })
       .finally(() => load(false));
@@ -202,30 +204,35 @@ function loadNuclear() {
 
 const yn = (b) => (b ? '<span class="yes">&#10003;</span>' : '<span class="no">&#10007;</span>');
 
+function nucLabel(p) {
+  return p.category === "former" ? "Former / shut down"
+    : p.category === "operating" ? "Operating"
+    : p.status || "Licensed / proposed";
+}
+
 function nucPopup(p) {
-  const label = p.category === "former" ? "Former / shut down" : "Operating";
-  return `<h3>${p.name}</h3><div>${label}</div>
+  return `<h3>${p.name}</h3><div>${nucLabel(p)}</div>
     <div><span class="k">Owner:</span> ${p.owner || "—"}</div>
+    ${p.county ? `<div><span class="k">Location:</span> ${p.county}, ${p.state}</div>` : ""}
     ${p.dissolved ? `<div><span class="k">Closed:</span> ${String(p.dissolved).slice(0, 4)}</div>` : ""}
     <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(p.ffe_unemp)}<span class="k">Coal:</span> ${yn(p.coal)}</div>`;
 }
 
-function makeNucLayer(wantFormer) {
+function makeNucLayer(cat, color) {
   return {
     layer: null,
     async show() {
       await loadNuclear();
       if (!this.layer) {
         this.layer = L.geoJSON(nucData, {
-          filter: (f) => (f.properties.category === "former") === wantFormer,
+          filter: (f) => f.properties.category === cat,
           pointToLayer: (f, latlng) => L.circleMarker(latlng, {
             radius: 6, weight: 1.5, color: "#222",
-            fillColor: wantFormer ? "#999" : "#1a9e1a", fillOpacity: 0.95,
+            fillColor: color, fillOpacity: 0.95,
           }),
           onEachFeature: (f, l) => {
             const p = f.properties;
-            const label = wantFormer ? "Former / shut down" : "Operating";
-            l.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${label}</span>`));
+            l.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${nucLabel(p)}</span>`));
             l.on("mouseout", hideHover);
             l.bindPopup(nucPopup(p));
           },
@@ -236,8 +243,10 @@ function makeNucLayer(wantFormer) {
     hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
   };
 }
-const nucOp = makeNucLayer(false);
-const nucFormer = makeNucLayer(true);
+const nucOp = makeNucLayer("operating", "#1a9e1a");
+const nucFormer = makeNucLayer("former", "#999");
+const nucEspCol = makeNucLayer("esp_col", "#2b6cb0");
+const nucAdvanced = makeNucLayer("advanced", "#8e44ad");
 
 /* ---------- Wire up controls ---------- */
 function bind(id, ctrl) {
@@ -251,6 +260,8 @@ bind("lyr_ffe_may", ffeMay);
 bind("lyr_counties", counties);
 bind("lyr_nuc_op", nucOp);
 bind("lyr_nuc_former", nucFormer);
+bind("lyr_nuc_esp_col", nucEspCol);
+bind("lyr_nuc_advanced", nucAdvanced);
 
 /* ---------- Plant eligibility table ---------- */
 const tableModal = document.getElementById("tableModal");
@@ -258,7 +269,8 @@ let tableSort = { key: "name", asc: true };
 
 function buildTable() {
   const tbody = document.querySelector("#nucTable tbody");
-  const val = (p, k) => (k === "status" ? (p.category === "former" ? 1 : 0)
+  const statusText = (p) => p.status || (p.category === "former" ? "Former" : "Operating");
+  const val = (p, k) => (k === "status" ? statusText(p).toLowerCase()
     : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
     : p[k] ? 1 : 0);
   const rows = [...nucData.features].sort((a, b) => {
@@ -268,7 +280,7 @@ function buildTable() {
   });
   tbody.innerHTML = rows.map((f) => {
     const p = f.properties;
-    const status = p.category === "former" ? "Former" : "Operating";
+    const status = statusText(p);
     return `<tr><td>${p.name}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${status}</td>` +
       `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(p.ffe_unemp)}</td><td class="c">${yn(p.coal)}</td></tr>`;
   }).join("");
