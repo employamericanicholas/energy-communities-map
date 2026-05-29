@@ -1,0 +1,574 @@
+{
+ "Wolf Creek Generating Station": {
+  "owners": "http://dbpedia.org/resource/Evergy | http://www.kepco.org/",
+  "operators": "Wolf Creek Nuclear Operating Corporation"
+ },
+ "Vogtle Electric Generating Plant": {
+  "owners": "http://dbpedia.org/resource/Dalton,_Georgia | http://dbpedia.org/resource/Georgia_Power",
+  "operators": "http://dbpedia.org/resource/Southern_Nuclear"
+ },
+ "Indian Point Energy Center": {
+  "owners": "http://dbpedia.org/resource/Holtec_International",
+  "operators": "http://dbpedia.org/resource/Holtec_International"
+ },
+ "Limerick Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "Calvert Cliffs Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "Constellation Energy"
+ },
+ "Cooper Nuclear Station": {
+  "owners": "http://dbpedia.org/resource/Nebraska_Public_Power_District",
+  "operators": "http://dbpedia.org/resource/Nebraska_Public_Power_District"
+ },
+ "Monticello Nuclear Generating Plant": {
+  "owners": "http://dbpedia.org/resource/Xcel_Energy",
+  "operators": "http://dbpedia.org/resource/Northern_States_Power_Company"
+ },
+ "Midland Cogeneration Venture": {
+  "owners": "Midland Cogeneration Venture Limited Partnership",
+  "operators": ""
+ },
+ "William States Lee III Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": ""
+ },
+ "Alan R. Barton Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Erie Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Hallam Nuclear Power Facility": {
+  "owners": "",
+  "operators": ""
+ },
+ "Kintigh Generating Station": {
+  "owners": "",
+  "operators": ""
+ },
+ "SOS: The San Onofre Syndrome": {
+  "owners": "",
+  "operators": ""
+ },
+ "Browns Ferry Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Tennessee_Valley_Authority",
+  "operators": "http://dbpedia.org/resource/Tennessee_Valley_Authority"
+ },
+ "Duane Arnold Energy Center": {
+  "owners": " | http://dbpedia.org/resource/Central_Iowa_Power_Cooperative | http://dbpedia.org/resource/Corn_Belt_Power_Cooperative | http://dbpedia.org/resource/NextEra_Energy_Resources",
+  "operators": "http://dbpedia.org/resource/NextEra_Energy_Resources"
+ },
+ "H. B. Robinson Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": "http://dbpedia.org/resource/Duke_Energy"
+ },
+ "Washington Xe-100 reactor site": {
+  "owners": "http://dbpedia.org/resource/Energy_Northwest",
+  "operators": "http://dbpedia.org/resource/Energy_Northwest"
+ },
+ "Dresden Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "Hope Creek Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Public_Service_Enterprise_Group",
+  "operators": "http://dbpedia.org/resource/Public_Service_Enterprise_Group"
+ },
+ "Turkey Point Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Florida_Power_&_Light",
+  "operators": "http://dbpedia.org/resource/Florida_Power_&_Light"
+ },
+ "Shearon Harris Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": "http://dbpedia.org/resource/Duke_Energy"
+ },
+ "Trojan Nuclear Power Plant": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Portland_General_Electric"
+ },
+ "Experimental Breeder Reactor II": {
+  "owners": "",
+  "operators": ""
+ },
+ "Vallecitos Nuclear Center": {
+  "owners": "",
+  "operators": ""
+ },
+ "300 Area": {
+  "owners": "",
+  "operators": ""
+ },
+ "Douglas Point Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "South River Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Prairie Island Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Xcel_Energy",
+  "operators": "http://dbpedia.org/resource/Northern_States_Power_Company"
+ },
+ "Enrico Fermi Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/DTE_Energy",
+  "operators": "http://dbpedia.org/resource/DTE_Energy"
+ },
+ "Nine Mile Point Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy | http://dbpedia.org/resource/Long_Island_Power_Authority",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "McGuire Nuclear Station": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": "http://dbpedia.org/resource/Duke_Energy"
+ },
+ "Byron Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "Constellation Energy"
+ },
+ "San Onofre Nuclear Generating Station": {
+  "owners": " | City of Riverside Utilities Department | San Diego Gas & Electric | Southern California Edison",
+  "operators": "Southern California Edison"
+ },
+ "Connecticut Yankee Nuclear Power Plant": {
+  "owners": "Connecticut Yankee Atomic Power Company",
+  "operators": "Connecticut Yankee Atomic Power Company"
+ },
+ "Brunswick Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": "http://dbpedia.org/resource/Duke_Energy"
+ },
+ "Edwin I. Hatch Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Dalton,_Georgia | http://dbpedia.org/resource/Georgia_Power",
+  "operators": "http://dbpedia.org/resource/Southern_Nuclear"
+ },
+ "Palo Verde Nuclear Generating Station": {
+  "owners": "Arizona Public Service | El Paso Electric | LADWP | PNM Resources | SCPPA | Salt River Project | So. California Edison",
+  "operators": "http://dbpedia.org/resource/Pinnacle_West_Capital"
+ },
+ "Clinton Power Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "WNP-3 and WNP-5": {
+  "owners": "http://dbpedia.org/resource/Energy_Northwest",
+  "operators": ""
+ },
+ "Sundesert Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Galena Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Allens Creek Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Forked River Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Palisades Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Holtec_International",
+  "operators": "http://dbpedia.org/resource/Entergy"
+ },
+ "R. E. Ginna Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "St. Lucie Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Florida_Power_&_Light",
+  "operators": "http://dbpedia.org/resource/Florida_Power_&_Light"
+ },
+ "Three Mile Island Nuclear Generating Station": {
+  "owners": "Unit 1: Constellation Energy | Unit 2: EnergySolutions",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "Grand Gulf Nuclear Station": {
+  "owners": "Cooperative Energy | http://dbpedia.org/resource/Entergy",
+  "operators": "http://dbpedia.org/resource/Entergy"
+ },
+ "Sequoyah Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Tennessee_Valley_Authority",
+  "operators": "http://dbpedia.org/resource/Tennessee_Valley_Authority"
+ },
+ "WNP-1 and WNP-4": {
+  "owners": "http://dbpedia.org/resource/Energy_Northwest",
+  "operators": ""
+ },
+ "Bellefonte Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Tennessee_Valley_Authority",
+  "operators": ""
+ },
+ "Rancho Seco Nuclear Generating Station": {
+  "owners": "",
+  "operators": "SMUD 1974-present"
+ },
+ "Vermont Yankee Nuclear Power Plant": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Entergy"
+ },
+ "Fort Saint Vrain Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Bodega Bay Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Nuclear renaissance in the United States": {
+  "owners": "",
+  "operators": ""
+ },
+ "Haven Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "SL-1": {
+  "owners": "",
+  "operators": ""
+ },
+ "Stanislaus Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Crystal River Energy Complex": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": "Duke Energy"
+ },
+ "Arkansas Nuclear One": {
+  "owners": "http://dbpedia.org/resource/Entergy",
+  "operators": "http://dbpedia.org/resource/Entergy"
+ },
+ "Phipps Bend Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Tennessee_Valley_Authority",
+  "operators": "Tennessee Valley Authority"
+ },
+ "Kewaunee Power Station": {
+  "owners": "http://dbpedia.org/resource/Dominion_Energy",
+  "operators": "http://dbpedia.org/resource/Dominion_Energy"
+ },
+ "Surry Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Dominion_Energy",
+  "operators": "http://dbpedia.org/resource/Dominion_Energy"
+ },
+ "Levy County Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Progress_Energy_Inc",
+  "operators": ""
+ },
+ "Ravenswood Nuclear Power Plant": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Consolidated_Edison"
+ },
+ "La Crosse Boiling Water Reactor": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Dairyland_Power_Cooperative"
+ },
+ "List of canceled nuclear reactors in the United States": {
+  "owners": "",
+  "operators": ""
+ },
+ "Montague Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Atlantic Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Humboldt Bay Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Pacific_Gas_and_Electric_Company",
+  "operators": "http://dbpedia.org/resource/Pacific_Gas_and_Electric_Company"
+ },
+ "Susquehanna Steam Electric Station": {
+  "owners": "http://dbpedia.org/resource/Allegheny_Electric_Cooperative | http://dbpedia.org/resource/Talen_Energy",
+  "operators": "http://dbpedia.org/resource/Talen_Energy"
+ },
+ "Sodium Reactor Experiment": {
+  "owners": "Atomics International Division, North American Aviation",
+  "operators": ""
+ },
+ "Yellow Creek Nuclear Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Piqua Nuclear Generating Station": {
+  "owners": "",
+  "operators": ""
+ },
+ "Sears Isle Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Quad Cities Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy | http://dbpedia.org/resource/MidAmerican_Energy_Company",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "Clinch River Breeder Reactor Project": {
+  "owners": "http://dbpedia.org/resource/United_States_Department_of_Energy",
+  "operators": "http://dbpedia.org/resource/Tennessee_Valley_Authority"
+ },
+ "Braidwood Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "Constellation Energy"
+ },
+ "Hartsville Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Tennessee_Valley_Authority",
+  "operators": "Tennessee Valley Authority"
+ },
+ "Diablo Canyon Power Plant": {
+  "owners": "http://dbpedia.org/resource/Pacific_Gas_and_Electric_Company",
+  "operators": "http://dbpedia.org/resource/Pacific_Gas_and_Electric_Company"
+ },
+ "Salem Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy | http://dbpedia.org/resource/Public_Service_Enterprise_Group",
+  "operators": "http://dbpedia.org/resource/Public_Service_Enterprise_Group"
+ },
+ "Blue Castle Project": {
+  "owners": "Blue Castle Holdings",
+  "operators": ""
+ },
+ "Crystal River Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": ""
+ },
+ "Pathfinder Nuclear Generating Station": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Northern_States_Power_Company"
+ },
+ "Shoreham Nuclear Power Plant": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Long_Island_Lighting_Company"
+ },
+ "Catawba Nuclear Station": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Duke_Energy"
+ },
+ "Sheldon Power Station": {
+  "owners": "",
+  "operators": ""
+ },
+ "Victoria County Station": {
+  "owners": "",
+  "operators": ""
+ },
+ "Anti-nuclear movement in California": {
+  "owners": "",
+  "operators": ""
+ },
+ "Cherokee Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Black Fox Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Millstone Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Dominion_Energy",
+  "operators": "http://dbpedia.org/resource/Dominion_Energy"
+ },
+ "Saxton Nuclear Generating Station": {
+  "owners": "Saxton Nuclear Experimental Corp  and GPU Nuclear",
+  "operators": "Saxton Nuclear Experimental Corp  and GPU Nuclear"
+ },
+ "South Texas Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Austin,_Texas | http://dbpedia.org/resource/Constellation_Energy | http://dbpedia.org/resource/San_Antonio",
+  "operators": "STP Nuclear Operating Company"
+ },
+ "Perry Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Vistra_Corp",
+  "operators": "http://dbpedia.org/resource/Vistra_Corp"
+ },
+ "Fort Calhoun Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Omaha_Public_Power_District",
+  "operators": "http://dbpedia.org/resource/Exelon"
+ },
+ "Pilgrim Nuclear Power Station": {
+  "owners": "http://dbpedia.org/resource/Holtec_International",
+  "operators": "http://dbpedia.org/resource/Holtec_International"
+ },
+ "Point Beach Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/NextEra_Energy_Resources",
+  "operators": "http://dbpedia.org/resource/NextEra_Energy_Resources"
+ },
+ "William H. Zimmer Power Station": {
+  "owners": "Vistra Corp",
+  "operators": ""
+ },
+ "Critical Masses": {
+  "owners": "",
+  "operators": ""
+ },
+ "Elk River Station": {
+  "owners": "",
+  "operators": ""
+ },
+ "ML-1": {
+  "owners": "",
+  "operators": ""
+ },
+ "Big Rock Point Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Blue Hills Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Aurora nuclear reactor": {
+  "owners": "",
+  "operators": ""
+ },
+ "Seabrook Station Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/NextEra_Energy_Resources",
+  "operators": "http://dbpedia.org/resource/NextEra_Energy_Resources"
+ },
+ "Callaway Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Ameren",
+  "operators": "http://dbpedia.org/resource/Ameren"
+ },
+ "LaSalle County Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "River Bend Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Entergy",
+  "operators": "http://dbpedia.org/resource/Entergy"
+ },
+ "Joseph M. Farley Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Alabama_Power",
+  "operators": "http://dbpedia.org/resource/Southern_Nuclear"
+ },
+ "Watts Bar Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/Tennessee_Valley_Authority",
+  "operators": "http://dbpedia.org/resource/Tennessee_Valley_Authority"
+ },
+ "Virgil C. Summer Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Dominion_Energy | http://dbpedia.org/resource/Santee_Cooper",
+  "operators": "http://dbpedia.org/resource/Dominion_Energy"
+ },
+ "Carolinas–Virginia Tube Reactor": {
+  "owners": "",
+  "operators": "Carolinas Virginia Nuclear Power Associates"
+ },
+ "Greene County Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Marble Hill Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Yankee Rowe Nuclear Power Station": {
+  "owners": "",
+  "operators": ""
+ },
+ "Nuclear power plants in California": {
+  "owners": "",
+  "operators": ""
+ },
+ "Oconee Nuclear Station": {
+  "owners": "http://dbpedia.org/resource/Duke_Energy",
+  "operators": "http://dbpedia.org/resource/Duke_Energy"
+ },
+ "Zion Nuclear Power Station": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "Columbia Generating Station": {
+  "owners": "http://dbpedia.org/resource/Energy_Northwest",
+  "operators": "http://dbpedia.org/resource/Energy_Northwest"
+ },
+ "James A. FitzPatrick Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Constellation_Energy",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "Beaver Valley Nuclear Power Station": {
+  "owners": "http://dbpedia.org/resource/Vistra_Corp",
+  "operators": "http://dbpedia.org/resource/Vistra_Corp"
+ },
+ "Davis–Besse Nuclear Power Station": {
+  "owners": "http://dbpedia.org/resource/Vistra_Corp",
+  "operators": "http://dbpedia.org/resource/Vistra_Corp"
+ },
+ "Peach Bottom Nuclear Generating Station": {
+  "owners": "Unit 1: Constellation Energy | Units 2–3: Constellation Energy , | http://dbpedia.org/resource/Public_Service_Enterprise_Group",
+  "operators": "http://dbpedia.org/resource/Constellation_Energy"
+ },
+ "North Anna Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Dominion_Energy | http://dbpedia.org/resource/Old_Dominion_Electric_Cooperative",
+  "operators": "http://dbpedia.org/resource/Dominion_Energy"
+ },
+ "Bell Bend Nuclear Power Plant": {
+  "owners": "",
+  "operators": "PP&L"
+ },
+ "Shippingport Atomic Power Station": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/Duquesne_Light_Company"
+ },
+ "Maine Yankee Nuclear Power Plant": {
+  "owners": "",
+  "operators": "Maine Yankee Atomic Power Company"
+ },
+ "Jamesport Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "Offshore Power Systems": {
+  "owners": "",
+  "operators": ""
+ },
+ "Experimental Breeder Reactor I": {
+  "owners": "",
+  "operators": ""
+ },
+ "Comanche Peak Nuclear Power Plant": {
+  "owners": "http://dbpedia.org/resource/Luminant",
+  "operators": "Luminant Generation Company LLC"
+ },
+ "Donald C. Cook Nuclear Plant": {
+  "owners": "http://dbpedia.org/resource/American_Electric_Power",
+  "operators": "http://dbpedia.org/resource/American_Electric_Power"
+ },
+ "Waterford Nuclear Generating Station": {
+  "owners": "http://dbpedia.org/resource/Entergy",
+  "operators": "http://dbpedia.org/resource/Entergy"
+ },
+ "Oyster Creek Nuclear Generating Station": {
+  "owners": "Oyster Creek Environmental Protection",
+  "operators": "Holtec Decommissioning International"
+ },
+ "Fermi 1": {
+  "owners": "",
+  "operators": "http://dbpedia.org/resource/DTE_Electric_Company"
+ },
+ "Bailly Nuclear Power Plant": {
+  "owners": "",
+  "operators": ""
+ },
+ "MH-1A": {
+  "owners": "",
+  "operators": ""
+ },
+ "Advanced Test Reactor": {
+  "owners": "",
+  "operators": ""
+ },
+ "SM-1": {
+  "owners": "",
+  "operators": ""
+ },
+ "N-Reactor": {
+  "owners": "",
+  "operators": ""
+ }
+}

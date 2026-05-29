@@ -181,26 +181,63 @@ function makeCbsa(color) {
 const cbsaV1 = lazyLayer("data/cbsa_v1_2010.geojson", makeCbsa("#6a3d9a"));
 const cbsaV2 = lazyLayer("data/cbsa_v2_2020.geojson", makeCbsa("#1f6fb2"));
 
-/* ---------- Nuclear sites ---------- */
-const nuclear = lazyLayer("data/nuclear.geojson", (gj) => {
-  setCount("cnt_nuclear", gj.features.length);
-  return L.geoJSON(gj, {
-    pointToLayer: (f, latlng) => {
-      const former = f.properties.category === "former";
-      return L.circleMarker(latlng, {
-        radius: 6, weight: 1.5, color: "#222",
-        fillColor: former ? "#999" : "#1a9e1a", fillOpacity: 0.95,
-      });
+/* ---------- Nuclear sites (shared loader, two display layers + table) ---------- */
+let nucData = null, nucPromise = null;
+function loadNuclear() {
+  if (!nucPromise) {
+    load(true);
+    nucPromise = fetch("data/nuclear.geojson")
+      .then((r) => r.json())
+      .then((gj) => {
+        nucData = gj;
+        const isFormer = (f) => f.properties.category === "former";
+        setCount("cnt_nuc_op", gj.features.filter((f) => !isFormer(f)).length);
+        setCount("cnt_nuc_former", gj.features.filter(isFormer).length);
+        return gj;
+      })
+      .finally(() => load(false));
+  }
+  return nucPromise;
+}
+
+const yn = (b) => (b ? '<span class="yes">&#10003;</span>' : '<span class="no">&#10007;</span>');
+
+function nucPopup(p) {
+  const label = p.category === "former" ? "Former / shut down" : "Operating";
+  return `<h3>${p.name}</h3><div>${label}</div>
+    <div><span class="k">Owner:</span> ${p.owner || "—"}</div>
+    ${p.dissolved ? `<div><span class="k">Closed:</span> ${String(p.dissolved).slice(0, 4)}</div>` : ""}
+    <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(p.ffe_unemp)}<span class="k">Coal:</span> ${yn(p.coal)}</div>`;
+}
+
+function makeNucLayer(wantFormer) {
+  return {
+    layer: null,
+    async show() {
+      await loadNuclear();
+      if (!this.layer) {
+        this.layer = L.geoJSON(nucData, {
+          filter: (f) => (f.properties.category === "former") === wantFormer,
+          pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+            radius: 6, weight: 1.5, color: "#222",
+            fillColor: wantFormer ? "#999" : "#1a9e1a", fillOpacity: 0.95,
+          }),
+          onEachFeature: (f, l) => {
+            const p = f.properties;
+            const label = wantFormer ? "Former / shut down" : "Operating";
+            l.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${label}</span>`));
+            l.on("mouseout", hideHover);
+            l.bindPopup(nucPopup(p));
+          },
+        });
+      }
+      if (!map.hasLayer(this.layer)) this.layer.addTo(map);
     },
-    onEachFeature: (f, l) => {
-      const p = f.properties;
-      const label = p.category === "former" ? "Former / shut down" : p.category === "planned" ? "Planned / under construction" : "Operating";
-      l.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${label}</span>`));
-      l.on("mouseout", hideHover);
-      l.bindPopup(`<h3>${p.name}</h3><div>${label}</div>${p.admin ? `<div><span class="k">Location:</span> ${p.admin}</div>` : ""}${p.dissolved ? `<div><span class="k">Closed:</span> ${String(p.dissolved).slice(0,4)}</div>` : ""}`);
-    },
-  });
-});
+    hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
+  };
+}
+const nucOp = makeNucLayer(false);
+const nucFormer = makeNucLayer(true);
 
 /* ---------- Wire up controls ---------- */
 function bind(id, ctrl) {
@@ -212,7 +249,49 @@ bind("lyr_coal", coal);
 bind("lyr_ffe_do", ffeDo);
 bind("lyr_ffe_may", ffeMay);
 bind("lyr_counties", counties);
-bind("lyr_nuclear", nuclear);
+bind("lyr_nuc_op", nucOp);
+bind("lyr_nuc_former", nucFormer);
+
+/* ---------- Plant eligibility table ---------- */
+const tableModal = document.getElementById("tableModal");
+let tableSort = { key: "name", asc: true };
+
+function buildTable() {
+  const tbody = document.querySelector("#nucTable tbody");
+  const val = (p, k) => (k === "status" ? (p.category === "former" ? 1 : 0)
+    : k === "name" || k === "owner" ? (p[k] || "").toLowerCase()
+    : p[k] ? 1 : 0);
+  const rows = [...nucData.features].sort((a, b) => {
+    const va = val(a.properties, tableSort.key), vb = val(b.properties, tableSort.key);
+    const cmp = va < vb ? -1 : va > vb ? 1 : a.properties.name.localeCompare(b.properties.name);
+    return tableSort.asc ? cmp : -cmp;
+  });
+  tbody.innerHTML = rows.map((f) => {
+    const p = f.properties;
+    const status = p.category === "former" ? "Former" : "Operating";
+    return `<tr><td>${p.name}</td><td>${p.owner || "—"}</td><td>${status}</td>` +
+      `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(p.ffe_unemp)}</td><td class="c">${yn(p.coal)}</td></tr>`;
+  }).join("");
+}
+
+async function openTable() {
+  await loadNuclear();
+  buildTable();
+  tableModal.classList.add("open");
+}
+function closeTable() { tableModal.classList.remove("open"); }
+
+document.getElementById("tableBtn").addEventListener("click", openTable);
+document.getElementById("tableClose").addEventListener("click", closeTable);
+tableModal.addEventListener("click", (e) => { if (e.target === tableModal) closeTable(); });
+document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeTable(); });
+document.querySelectorAll("#nucTable th").forEach((th) => {
+  th.addEventListener("click", () => {
+    const k = th.dataset.k;
+    tableSort = { key: k, asc: tableSort.key === k ? !tableSort.asc : true };
+    buildTable();
+  });
+});
 
 document.querySelectorAll('input[name="msa"]').forEach((r) => {
   r.addEventListener("change", () => {

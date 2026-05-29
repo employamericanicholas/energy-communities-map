@@ -64,13 +64,13 @@
 
     <section class="group">
       <h2>Energy infrastructure</h2>
-      <label class="layer"><input type="checkbox" id="lyr_nuclear">
+      <label class="layer"><input type="checkbox" id="lyr_nuc_op">
         <span class="swatch swatch-dot" style="background:#1a9e1a"></span>
-        Nuclear power plant sites <span class="cnt" id="cnt_nuclear"></span></label>
-      <div class="legend-sub">
-        <span><i class="dot" style="background:#1a9e1a"></i>Operating</span>
-        <span><i class="dot" style="background:#999"></i>Former / shut down</span>
-      </div>
+        Operating nuclear plants <span class="cnt" id="cnt_nuc_op"></span></label>
+      <label class="layer"><input type="checkbox" id="lyr_nuc_former">
+        <span class="swatch swatch-dot" style="background:#999"></span>
+        Former / shut-down nuclear plants <span class="cnt" id="cnt_nuc_former"></span></label>
+      <button id="tableBtn" class="table-btn">&#9638; View plant eligibility table</button>
     </section>
 
     <section class="group sources">
@@ -83,6 +83,29 @@
 </div>
 
 <div id="hoverinfo" aria-hidden="true"></div>
+
+<div id="tableModal" class="modal" aria-hidden="true">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2>Nuclear power plants &mdash; energy community eligibility</h2>
+      <button id="tableClose" aria-label="Close table">&times;</button>
+    </div>
+    <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort.</p>
+    <div class="modal-body">
+      <table id="nucTable">
+        <thead><tr>
+          <th data-k="name">Plant</th>
+          <th data-k="owner">Owner / site owner</th>
+          <th data-k="status">Status</th>
+          <th data-k="ffe" class="c">FFE</th>
+          <th data-k="ffe_unemp" class="c">FFE&nbsp;+&nbsp;Unemployment</th>
+          <th data-k="coal" class="c">Coal Community</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
