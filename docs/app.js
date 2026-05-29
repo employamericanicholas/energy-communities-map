@@ -98,7 +98,7 @@ function loadFFE() {
 function ffePopup(p) {
   const status = p.do
     ? `<span class="pill" style="background:#1f8a70">Qualifying energy community</span>`
-    : `<span class="pill" style="background:#9cc0b6;color:#173">Meets FFE threshold — unemployment pending</span>`;
+    : `<span class="pill" style="background:#f0b400;color:#3a2700">Meets FFE employment threshold — not currently qualifying (unemployment below national-average threshold)</span>`;
   let v = "";
   if (p.do) v = `<div><span class="k">Eligible under:</span> ${[p.v1 ? "Vintage 1 (2010-based)" : null, p.v2 ? "Vintage 2 (2020-based)" : null].filter(Boolean).join(", ") || "—"}</div>`;
   return `<h3>${p.name}, ${p.state}</h3>${status}
@@ -133,10 +133,10 @@ const ffeMay = {
     if (!this.layer) {
       this.layer = L.geoJSON(ffeData, {
         filter: (f) => f.properties.may && !f.properties.do,
-        style: { color: "#6aa", weight: 0.5, fillColor: "#9cc0b6", fillOpacity: 0.5 },
+        style: { color: "#9c7400", weight: 0.5, fillColor: "#f0b400", fillOpacity: 0.55 },
         onEachFeature: (f, l) => {
           const p = f.properties;
-          l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">FFE threshold (pending)</span>`));
+          l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">Meets FFE threshold — not qualifying</span>`));
           l.on("mouseout", hideHover);
           l.bindPopup(ffePopup(p));
         },
