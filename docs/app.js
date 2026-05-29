@@ -266,6 +266,24 @@ bind("lyr_nuc_advanced", nucAdvanced);
 /* ---------- Plant eligibility table ---------- */
 const tableModal = document.getElementById("tableModal");
 let tableSort = { key: "name", asc: true };
+const MAX_SEL = 10;
+const selected = new Set();
+let showSelectedOnly = false;
+const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+
+function updateSelUI() {
+  const n = selected.size;
+  const cnt = document.getElementById("selCount");
+  cnt.textContent = `${n} / ${MAX_SEL} selected`;
+  cnt.classList.toggle("maxed", n >= MAX_SEL);
+  const onlyBtn = document.getElementById("selOnlyBtn");
+  onlyBtn.textContent = showSelectedOnly ? "Show all plants" : "Show only selected";
+  onlyBtn.disabled = n === 0 && !showSelectedOnly;
+  document.getElementById("selClearBtn").disabled = n === 0 && !showSelectedOnly;
+  document.querySelectorAll("#nucTable tbody input[type=checkbox]").forEach((cb) => {
+    cb.disabled = !cb.checked && n >= MAX_SEL;
+  });
+}
 
 function buildTable() {
   const tbody = document.querySelector("#nucTable tbody");
@@ -273,17 +291,21 @@ function buildTable() {
   const val = (p, k) => (k === "status" ? statusText(p).toLowerCase()
     : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
     : p[k] ? 1 : 0);
-  const rows = [...nucData.features].sort((a, b) => {
+  let feats = [...nucData.features];
+  if (showSelectedOnly) feats = feats.filter((f) => selected.has(f.properties.name));
+  feats.sort((a, b) => {
     const va = val(a.properties, tableSort.key), vb = val(b.properties, tableSort.key);
     const cmp = va < vb ? -1 : va > vb ? 1 : a.properties.name.localeCompare(b.properties.name);
     return tableSort.asc ? cmp : -cmp;
   });
-  tbody.innerHTML = rows.map((f) => {
+  tbody.innerHTML = feats.map((f) => {
     const p = f.properties;
-    const status = statusText(p);
-    return `<tr><td>${p.name}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${status}</td>` +
+    const chk = selected.has(p.name) ? " checked" : "";
+    return `<tr><td class="sel"><input type="checkbox" data-name="${attr(p.name)}"${chk}></td>` +
+      `<td>${p.name}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${statusText(p)}</td>` +
       `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(p.ffe_unemp)}</td><td class="c">${yn(p.coal)}</td></tr>`;
   }).join("");
+  updateSelUI();
 }
 
 async function openTable() {
@@ -300,9 +322,32 @@ document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeTable
 document.querySelectorAll("#nucTable th").forEach((th) => {
   th.addEventListener("click", () => {
     const k = th.dataset.k;
+    if (!k) return;
     tableSort = { key: k, asc: tableSort.key === k ? !tableSort.asc : true };
     buildTable();
   });
+});
+document.querySelector("#nucTable tbody").addEventListener("change", (e) => {
+  const cb = e.target;
+  if (cb.type !== "checkbox") return;
+  if (cb.checked) {
+    if (selected.size >= MAX_SEL) { cb.checked = false; return; }
+    selected.add(cb.dataset.name);
+  } else {
+    selected.delete(cb.dataset.name);
+  }
+  if (showSelectedOnly && !cb.checked) buildTable();
+  else updateSelUI();
+});
+document.getElementById("selOnlyBtn").addEventListener("click", () => {
+  if (!showSelectedOnly && selected.size === 0) return;
+  showSelectedOnly = !showSelectedOnly;
+  buildTable();
+});
+document.getElementById("selClearBtn").addEventListener("click", () => {
+  selected.clear();
+  showSelectedOnly = false;
+  buildTable();
 });
 
 document.querySelectorAll('input[name="msa"]').forEach((r) => {

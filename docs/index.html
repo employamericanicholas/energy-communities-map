@@ -100,9 +100,16 @@
       <button id="tableClose" aria-label="Close table">&times;</button>
     </div>
     <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort. Eligibility applies only to projects placed in service after June&nbsp;22,&nbsp;2025 and before the release of the 2026 Annual Statistical Area Category and Coal Closure Category updates.</p>
+    <div class="table-toolbar">
+      <button id="selOnlyBtn" type="button" disabled>Show only selected</button>
+      <button id="selClearBtn" type="button" disabled>Clear selection</button>
+      <span id="selCount" class="sel-count">0 / 10 selected</span>
+      <span class="sel-hint">Tick up to 10 plants to focus the table on just those.</span>
+    </div>
     <div class="modal-body">
       <table id="nucTable">
         <thead><tr>
+          <th class="sel" aria-label="Select"></th>
           <th data-k="name">Plant</th>
           <th data-k="state">State</th>
           <th data-k="county">County</th>
