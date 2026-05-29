@@ -164,14 +164,17 @@ const counties = lazyLayer("data/counties.geojson", (gj) =>
 function makeCbsa(color) {
   return (gj) =>
     L.geoJSON(gj, {
-      style: { color: color, weight: 1.3, fill: true, fillOpacity: 0.04, fillColor: color },
+      style: (f) => f.properties.kind === "non-MSA"
+        ? { color: color, weight: 1.0, dashArray: "4 3", fill: true, fillOpacity: 0.02, fillColor: color }
+        : { color: color, weight: 1.3, fill: true, fillOpacity: 0.06, fillColor: color },
       onEachFeature: (f, l) => {
         const p = f.properties;
-        const kind = p.LSAD === "M1" ? "Metropolitan Statistical Area"
-          : p.LSAD === "M2" ? "Micropolitan Statistical Area" : "Statistical Area";
-        l.on("mouseover", (e) => { e.target.setStyle({ weight: 2.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${kind}</span>`); });
-        l.on("mouseout", (e) => { e.target.setStyle({ weight: 1.3 }); hideHover(); });
-        l.bindPopup(`<h3>${p.NAME}</h3><div>${kind}</div><div><span class="k">CBSA code:</span> ${p.GEOID}</div>`);
+        const isMsa = p.kind !== "non-MSA";
+        const label = isMsa ? "Metropolitan Statistical Area (MSA)" : "Non-MSA area";
+        const baseWeight = isMsa ? 1.3 : 1.0;
+        l.on("mouseover", (e) => { e.target.setStyle({ weight: 2.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${label}</span>`); });
+        l.on("mouseout", (e) => { e.target.setStyle({ weight: baseWeight }); hideHover(); });
+        l.bindPopup(`<h3>${p.NAME}</h3><div>${label}</div><div><span class="k">Area code:</span> ${p.GEOID}</div>`);
       },
     });
 }
