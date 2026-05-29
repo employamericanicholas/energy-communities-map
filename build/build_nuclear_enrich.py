@@ -84,10 +84,20 @@ def locate(pt, tree, geoms, feats):
     return None
 
 
+def nearest(pt, tree, geoms, feats):
+    """Containing polygon, else closest one (for coastal points in water)."""
+    hit = locate(pt, tree, geoms, feats)
+    if hit:
+        return hit
+    i = min(range(len(geoms)), key=lambda j: geoms[j].distance(pt))
+    return feats[i]["properties"]
+
+
 def main():
     owners = json.load(open(os.path.join(ROOT, "data", "nuclear_owners_dbp.json")))
     ffe = index_layer(os.path.join(D, "ffe_counties.geojson"))
     coal = index_layer(os.path.join(D, "coal_tracts.geojson"))
+    cty = index_layer(os.path.join(D, "counties.geojson"))
 
     gj = json.load(open(os.path.join(D, "nuclear.geojson")))
     n_ffe = n_un = n_coal = 0
@@ -96,6 +106,9 @@ def main():
         lon, lat = f["geometry"]["coordinates"]
         pt = Point(lon, lat)
         p["owner"] = owner_for(p["name"], owners)
+        cc = nearest(pt, *cty)
+        p["county"] = cc.get("NAMELSAD", "")
+        p["state"] = cc.get("STATE_NAME", "")
         fc = locate(pt, *ffe)
         p["ffe"] = bool(fc and (fc.get("do") or fc.get("may")))
         p["ffe_unemp"] = bool(fc and fc.get("do"))

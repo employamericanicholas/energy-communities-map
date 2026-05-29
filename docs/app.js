@@ -259,7 +259,7 @@ let tableSort = { key: "name", asc: true };
 function buildTable() {
   const tbody = document.querySelector("#nucTable tbody");
   const val = (p, k) => (k === "status" ? (p.category === "former" ? 1 : 0)
-    : k === "name" || k === "owner" ? (p[k] || "").toLowerCase()
+    : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
     : p[k] ? 1 : 0);
   const rows = [...nucData.features].sort((a, b) => {
     const va = val(a.properties, tableSort.key), vb = val(b.properties, tableSort.key);
@@ -269,7 +269,7 @@ function buildTable() {
   tbody.innerHTML = rows.map((f) => {
     const p = f.properties;
     const status = p.category === "former" ? "Former" : "Operating";
-    return `<tr><td>${p.name}</td><td>${p.owner || "—"}</td><td>${status}</td>` +
+    return `<tr><td>${p.name}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${status}</td>` +
       `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(p.ffe_unemp)}</td><td class="c">${yn(p.coal)}</td></tr>`;
   }).join("");
 }
