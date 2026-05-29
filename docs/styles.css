@@ -97,6 +97,7 @@ html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystem
 #nucTable th { position: sticky; top: 0; background: #f2f5f8; cursor: pointer; white-space: nowrap; user-select: none; color: #11304e; }
 #nucTable th:hover { background: #e6ecf2; }
 #nucTable td.c, #nucTable th.c { text-align: center; }
+#nucTable tbody tr:nth-child(even) td { background: #f4f4f4; }
 #nucTable tbody tr:hover td { background: #f7fbff; }
 
 /* loading indicator */
