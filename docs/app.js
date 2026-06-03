@@ -147,18 +147,66 @@ const ffeMay = {
   hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
 };
 
+/* ---------- County -> MSA/non-MSA crosswalk (Treasury EC_MSA_V1_V2) ---------- */
+let msaXwalk = null, xwalkPromise = null;
+function loadXwalk() {
+  if (!xwalkPromise) {
+    load(true);
+    xwalkPromise = fetch("data/county_msa_xwalk.json")
+      .then((r) => r.json())
+      .then((d) => { msaXwalk = d; })
+      .catch((e) => console.error(e))
+      .finally(() => load(false));
+  }
+  return xwalkPromise;
+}
+
+function msaEntry(code, name, isCT) {
+  if (!code) return isCT
+    ? '<em>n/a — this vintage uses Connecticut planning regions</em>'
+    : "—";
+  const kind = Number(code) >= 100000 ? "non-MSA" : "MSA";
+  return `${name} <span class="k">(${kind} ${code})</span>`;
+}
+
+function countyMsaHtml(geoid) {
+  const x = msaXwalk && msaXwalk[geoid];
+  if (!x) return "";
+  const isCT = geoid.startsWith("09");
+  return `<div class="elig"><span class="k">Vintage 1 (2010-based):</span> ${msaEntry(x[0], x[1], isCT)}</div>
+    <div><span class="k">Vintage 2 (2020-based):</span> ${msaEntry(x[2], x[3], isCT)}</div>`;
+}
+
 /* ---------- Counties (reference outline) ---------- */
-const counties = lazyLayer("data/counties.geojson", (gj) =>
+const countiesBase = lazyLayer("data/counties.geojson", (gj) =>
   L.geoJSON(gj, {
     style: { color: "#555", weight: 0.6, fill: true, fillOpacity: 0, fillColor: "#000" },
     onEachFeature: (f, l) => {
       const p = f.properties;
-      l.on("mouseover", (e) => { e.target.setStyle({ weight: 1.6, color: "#000" }); showHover(`<b>${p.NAMELSAD}</b>, ${p.STATE_NAME} <span class="tag">FIPS ${p.GEOID}</span>`); });
+      l.on("mouseover", (e) => {
+        e.target.setStyle({ weight: 1.6, color: "#000" });
+        let extra = "";
+        const x = msaXwalk && msaXwalk[p.GEOID];
+        if (x && msaSel === "v1" && x[1]) extra = `<br>V1: ${x[1]}`;
+        if (x && msaSel === "v2" && x[3]) extra = `<br>V2: ${x[3]}`;
+        showHover(`<b>${p.NAMELSAD}</b>, ${p.STATE_NAME} <span class="tag">FIPS ${p.GEOID}</span>${extra}`);
+      });
       l.on("mouseout", (e) => { e.target.setStyle({ weight: 0.6, color: "#555" }); hideHover(); });
-      l.bindPopup(`<h3>${p.NAMELSAD}</h3><div>${p.STATE_NAME} (${p.STUSPS})</div><div><span class="k">FIPS:</span> ${p.GEOID}</div>`);
+      l.bindPopup(() =>
+        `<h3>${p.NAMELSAD}</h3><div>${p.STATE_NAME} (${p.STUSPS})</div>
+         <div><span class="k">FIPS:</span> ${p.GEOID}</div>${countyMsaHtml(p.GEOID)}`);
     },
   })
 );
+
+const counties = {
+  async show() {
+    await Promise.all([loadXwalk(), countiesBase.show()]);
+    const l = countiesBase.getLayer();
+    if (l && map.hasLayer(l)) l.bringToFront();
+  },
+  hide() { countiesBase.hide(); },
+};
 
 /* ---------- CBSA / MSA boundaries (two vintages) ---------- */
 function makeCbsa(color, vintage) {
@@ -269,7 +317,17 @@ function bind(id, ctrl) {
 bind("lyr_coal", coal);
 bind("lyr_ffe_do", ffeDo);
 bind("lyr_ffe_may", ffeMay);
-bind("lyr_counties", counties);
+
+/* Counties show when their checkbox is on OR an MSA vintage layer is active,
+   so MSA regions stay clickable at the county level. */
+let msaSel = "none";
+const countiesCb = document.getElementById("lyr_counties");
+function syncCounties() {
+  if (countiesCb.checked || msaSel !== "none") counties.show();
+  else counties.hide();
+}
+countiesCb.addEventListener("change", syncCounties);
+if (countiesCb.checked) counties.show();
 bind("lyr_nuc_op", nucOp);
 bind("lyr_nuc_former", nucFormer);
 bind("lyr_nuc_esp_col", nucEspCol);
@@ -363,10 +421,13 @@ document.getElementById("selClearBtn").addEventListener("click", () => {
 });
 
 document.querySelectorAll('input[name="msa"]').forEach((r) => {
-  r.addEventListener("change", () => {
+  r.addEventListener("change", async () => {
+    if (!r.checked) return;
+    msaSel = r.value;
     cbsaV1.hide(); cbsaV2.hide();
-    if (r.value === "v1" && r.checked) cbsaV1.show();
-    if (r.value === "v2" && r.checked) cbsaV2.show();
+    if (r.value === "v1") await cbsaV1.show();
+    if (r.value === "v2") await cbsaV2.show();
+    syncCounties(); // keep county outlines on top & clickable over MSA fills
   });
 });
 
