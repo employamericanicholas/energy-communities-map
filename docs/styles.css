@@ -84,6 +84,26 @@ html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystem
 }
 .table-btn:hover { background: #1b4a78; }
 
+/* ---- Individual plant picker ---- */
+.plant-picker { margin-top: 10px; }
+.plant-picker > summary { cursor: pointer; font-size: 13px; font-weight: 600; color: #11304e; padding: 4px 0; list-style: none; }
+.plant-picker > summary::-webkit-details-marker { display: none; }
+.plant-picker > summary::before { content: "\25B8"; display: inline-block; margin-right: 6px; transition: transform .15s; }
+.plant-picker[open] > summary::before { transform: rotate(90deg); }
+.picker-hint { font-weight: 400; font-size: 11px; color: #888; margin-left: 4px; }
+#plantSearch { width: 100%; margin: 6px 0; padding: 6px 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 12.5px; }
+.picker-actions { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.picker-note { font-size: 11px; color: #888; margin-right: auto; }
+.picker-actions button { padding: 3px 10px; font-size: 12px; border: 1px solid #11304e; background: #fff; color: #11304e; border-radius: 5px; cursor: pointer; }
+.picker-actions button:hover { background: #11304e; color: #fff; }
+.plant-list { max-height: 260px; overflow-y: auto; border: 1px solid #eee; border-radius: 6px; padding: 2px 6px; }
+.pl-group { margin-bottom: 4px; }
+.pl-cat { display: flex; align-items: center; gap: 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: #555; margin: 6px 0 3px; position: sticky; top: 0; background: #fff; padding: 2px 0; }
+.pl-item { display: flex; align-items: center; gap: 7px; font-size: 12.5px; padding: 2px 0; cursor: pointer; }
+.pl-item input { flex: 0 0 auto; cursor: pointer; }
+.pl-name { flex: 1 1 auto; line-height: 1.2; }
+.pl-meta { color: #999; font-size: 11px; flex: 0 0 auto; }
+
 /* ---- Plant eligibility table modal ---- */
 .modal {
   position: absolute; inset: 0; z-index: 2000; display: none;

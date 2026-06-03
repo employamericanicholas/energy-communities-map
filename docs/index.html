@@ -7,7 +7,7 @@
 <meta name="description" content="Interactive map of IRS Energy Community eligibility: coal closure census tracts, fossil fuel employment (FFE) counties, MSA/non-MSA boundaries (2010 & 2020 OMB vintages), U.S. counties, and nuclear power plant sites." />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<link rel="stylesheet" href="styles.css?v=20260603b" />
+<link rel="stylesheet" href="styles.css?v=20260603c" />
 </head>
 <body>
 <div id="map"></div>
@@ -83,6 +83,17 @@
         Advanced reactor sites <span class="cnt" id="cnt_nuc_advanced"></span></label>
       <p class="note">Advanced-reactor demonstration projects: TerraPower Natrium (Kemmerer, WY) and X-energy/Dow Xe-100 (Seadrift, TX).</p>
       <button id="tableBtn" class="table-btn">&#9638; View plant eligibility table</button>
+
+      <details id="plantPicker" class="plant-picker">
+        <summary>Individual plant sites <span class="picker-hint">add / remove specific plants</span></summary>
+        <input type="search" id="plantSearch" placeholder="Search by name, state, or county&hellip;" autocomplete="off" />
+        <div class="picker-actions">
+          <span class="picker-note">Buttons apply to current search results.</span>
+          <button type="button" id="pickAll">All</button>
+          <button type="button" id="pickNone">None</button>
+        </div>
+        <div id="plantList" class="plant-list"></div>
+      </details>
     </section>
 
     <section class="group sources">
@@ -131,6 +142,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=20260603b"></script>
+<script src="app.js?v=20260603c"></script>
 </body>
 </html>

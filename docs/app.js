@@ -337,26 +337,12 @@ backBtn.style.display = "none";
 backBtn.addEventListener("click", backToAreas);
 document.body.appendChild(backBtn);
 
-/* ---------- Nuclear sites (shared loader, two display layers + table) ---------- */
-let nucData = null, nucPromise = null;
-function loadNuclear() {
-  if (!nucPromise) {
-    load(true);
-    nucPromise = fetch("data/nuclear.geojson")
-      .then((r) => r.json())
-      .then((gj) => {
-        nucData = gj;
-        const byCat = (c) => gj.features.filter((f) => f.properties.category === c).length;
-        setCount("cnt_nuc_op", byCat("operating"));
-        setCount("cnt_nuc_former", byCat("former"));
-        setCount("cnt_nuc_esp_col", byCat("esp_col"));
-        setCount("cnt_nuc_advanced", byCat("advanced"));
-        return gj;
-      })
-      .finally(() => load(false));
-  }
-  return nucPromise;
-}
+/* ---------- Nuclear sites (per-plant visibility; categories = bulk toggles) ---------- */
+const NUC_COLORS = { operating: "#1a9e1a", former: "#999", esp_col: "#2b6cb0", advanced: "#8e44ad" };
+const NUC_CATS = ["operating", "former", "esp_col", "advanced"];
+const NUC_CAT_CB = { operating: "lyr_nuc_op", former: "lyr_nuc_former", esp_col: "lyr_nuc_esp_col", advanced: "lyr_nuc_advanced" };
+const NUC_CAT_CNT = { operating: "cnt_nuc_op", former: "cnt_nuc_former", esp_col: "cnt_nuc_esp_col", advanced: "cnt_nuc_advanced" };
+const NUC_CAT_LABEL = { operating: "Operating", former: "Former / shut down", esp_col: "ESP / COL sites", advanced: "Advanced reactors" };
 
 const yn = (b) => (b ? '<span class="yes">&#10003;</span>' : '<span class="no">&#10007;</span>');
 
@@ -374,35 +360,102 @@ function nucPopup(p) {
     <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(p.ffe_unemp)}<span class="k">Coal:</span> ${yn(p.coal)}</div>`;
 }
 
-function makeNucLayer(cat, color) {
-  return {
-    layer: null,
-    async show() {
-      await loadNuclear();
-      if (!this.layer) {
-        this.layer = L.geoJSON(nucData, {
-          filter: (f) => f.properties.category === cat,
-          pointToLayer: (f, latlng) => L.circleMarker(latlng, {
+/* Plant markers live in their own high pane so they stay above the polygon
+   fills even after counties/MSA regions are brought to front. */
+map.createPane("nucPane");
+map.getPane("nucPane").style.zIndex = 640;
+const nucRenderer = L.canvas({ pane: "nucPane" });
+
+let nucData = null, nucPromise = null;
+const nucLayer = L.layerGroup().addTo(map);   // holds the currently-visible markers
+const markersByName = {};                     // plant name -> circleMarker
+const catByName = {};                         // plant name -> category
+const visiblePlants = new Set();              // names currently shown on the map
+
+function loadNuclear() {
+  if (!nucPromise) {
+    load(true);
+    nucPromise = fetch("data/nuclear.geojson")
+      .then((r) => r.json())
+      .then((gj) => {
+        nucData = gj;
+        gj.features.forEach((f) => {
+          const p = f.properties;
+          const [lng, lat] = f.geometry.coordinates;
+          const m = L.circleMarker([lat, lng], {
+            renderer: nucRenderer, pane: "nucPane",
             radius: 6, weight: 1.5, color: "#222",
-            fillColor: color, fillOpacity: 0.95,
-          }),
-          onEachFeature: (f, l) => {
-            const p = f.properties;
-            l.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${nucLabel(p)}</span>`));
-            l.on("mouseout", hideHover);
-            l.bindPopup(nucPopup(p));
-          },
+            fillColor: NUC_COLORS[p.category] || "#1a9e1a", fillOpacity: 0.95,
+          });
+          m.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${nucLabel(p)}</span>`));
+          m.on("mouseout", hideHover);
+          m.bindPopup(nucPopup(p));
+          markersByName[p.name] = m;
+          catByName[p.name] = p.category;
         });
-      }
-      if (!map.hasLayer(this.layer)) this.layer.addTo(map);
-    },
-    hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
-  };
+        NUC_CATS.forEach((c) => setCount(NUC_CAT_CNT[c], gj.features.filter((f) => f.properties.category === c).length));
+        buildPlantPicker();
+        return gj;
+      })
+      .finally(() => load(false));
+  }
+  return nucPromise;
 }
-const nucOp = makeNucLayer("operating", "#1a9e1a");
-const nucFormer = makeNucLayer("former", "#999");
-const nucEspCol = makeNucLayer("esp_col", "#2b6cb0");
-const nucAdvanced = makeNucLayer("advanced", "#8e44ad");
+
+function plantsInCat(cat) { return Object.keys(catByName).filter((n) => catByName[n] === cat); }
+
+function setPlantVisible(name, on) {
+  const m = markersByName[name];
+  if (!m) return;
+  if (on && !visiblePlants.has(name)) { visiblePlants.add(name); nucLayer.addLayer(m); }
+  else if (!on && visiblePlants.has(name)) { visiblePlants.delete(name); nucLayer.removeLayer(m); }
+}
+
+function setCategoryVisible(cat, on) {
+  plantsInCat(cat).forEach((n) => setPlantVisible(n, on));
+  syncPickerForCat(cat);
+  refreshCatCheckbox(cat);
+}
+
+/* Category checkbox reflects its plants: checked = all on, indeterminate = some on. */
+function refreshCatCheckbox(cat) {
+  const names = plantsInCat(cat);
+  const vis = names.filter((n) => visiblePlants.has(n)).length;
+  const cb = document.getElementById(NUC_CAT_CB[cat]);
+  if (!cb) return;
+  cb.checked = vis > 0 && vis === names.length;
+  cb.indeterminate = vis > 0 && vis < names.length;
+}
+
+/* ----- Individual-plant picker (searchable side-panel list) ----- */
+function buildPlantPicker() {
+  const list = document.getElementById("plantList");
+  if (!list || !nucData) return;
+  let html = "";
+  NUC_CATS.forEach((cat) => {
+    const feats = nucData.features
+      .filter((f) => f.properties.category === cat)
+      .sort((a, b) => a.properties.name.localeCompare(b.properties.name));
+    if (!feats.length) return;
+    html += `<div class="pl-group" data-cat="${cat}">
+      <div class="pl-cat"><span class="swatch swatch-dot" style="background:${NUC_COLORS[cat]}"></span>${NUC_CAT_LABEL[cat]}</div>`;
+    feats.forEach((f) => {
+      const p = f.properties;
+      const chk = visiblePlants.has(p.name) ? " checked" : "";
+      const search = attr((p.name + " " + (p.state || "") + " " + (p.county || "")).toLowerCase());
+      html += `<label class="pl-item" data-search="${search}">
+        <input type="checkbox" data-name="${attr(p.name)}"${chk}>
+        <span class="pl-name">${p.name}</span><span class="pl-meta">${p.state || ""}</span></label>`;
+    });
+    html += `</div>`;
+  });
+  list.innerHTML = html;
+}
+
+function syncPickerForCat(cat) {
+  document.querySelectorAll(`#plantList .pl-group[data-cat="${cat}"] input[type=checkbox]`)
+    .forEach((cb) => { cb.checked = visiblePlants.has(cb.dataset.name); });
+}
 
 /* ---------- Wire up controls ---------- */
 function bind(id, ctrl) {
@@ -424,10 +477,50 @@ function syncCounties() {
 }
 countiesCb.addEventListener("change", syncCounties);
 if (countiesCb.checked) counties.show();
-bind("lyr_nuc_op", nucOp);
-bind("lyr_nuc_former", nucFormer);
-bind("lyr_nuc_esp_col", nucEspCol);
-bind("lyr_nuc_advanced", nucAdvanced);
+/* Nuclear categories are bulk on/off for every plant in the category */
+NUC_CATS.forEach((cat) => {
+  const cb = document.getElementById(NUC_CAT_CB[cat]);
+  cb.addEventListener("change", async () => {
+    const on = cb.checked;
+    await loadNuclear();
+    setCategoryVisible(cat, on);
+  });
+});
+
+/* Individual-plant picker: lazy-load on open, search, bulk All/None, per-plant toggle */
+const plantPicker = document.getElementById("plantPicker");
+plantPicker.addEventListener("toggle", async () => {
+  if (!plantPicker.open) return;
+  await loadNuclear();
+  if (!document.getElementById("plantList").children.length) buildPlantPicker();
+});
+document.getElementById("plantList").addEventListener("change", (e) => {
+  const cb = e.target;
+  if (cb.type !== "checkbox") return;
+  setPlantVisible(cb.dataset.name, cb.checked);
+  refreshCatCheckbox(catByName[cb.dataset.name]);
+});
+document.getElementById("plantSearch").addEventListener("input", (e) => {
+  const q = e.target.value.trim().toLowerCase();
+  document.querySelectorAll("#plantList .pl-item").forEach((el) => {
+    el.style.display = !q || el.dataset.search.includes(q) ? "" : "none";
+  });
+  document.querySelectorAll("#plantList .pl-group").forEach((g) => {
+    const any = [...g.querySelectorAll(".pl-item")].some((el) => el.style.display !== "none");
+    g.style.display = any ? "" : "none";
+  });
+});
+function bulkPicker(on) {
+  document.querySelectorAll("#plantList .pl-item").forEach((el) => {
+    if (el.style.display === "none") return;       // only rows matching the current search
+    const cb = el.querySelector("input");
+    setPlantVisible(cb.dataset.name, on);
+    cb.checked = on;
+  });
+  NUC_CATS.forEach(refreshCatCheckbox);
+}
+document.getElementById("pickAll").addEventListener("click", () => bulkPicker(true));
+document.getElementById("pickNone").addEventListener("click", () => bulkPicker(false));
 
 /* ---------- Plant eligibility table ---------- */
 const tableModal = document.getElementById("tableModal");
