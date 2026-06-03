@@ -190,24 +190,27 @@ function selectedMsaHeader(geoid) {
   return `<div class="msa-head">${msaEntry(code, name, isCT)} <span class="k">· ${label}</span></div>`;
 }
 
-/* ---------- Counties (reference outline) ---------- */
+/* ---------- Counties (thin reference outline; the level-2 drill layer) ---------- */
+function countyPopupHtml(p) {
+  return `<h3>${p.NAMELSAD}</h3>${selectedMsaHeader(p.GEOID)}<div>${p.STATE_NAME} (${p.STUSPS})</div>
+     <div><span class="k">FIPS:</span> ${p.GEOID}</div>${countyMsaHtml(p.GEOID)}`;
+}
+
 const countiesBase = lazyLayer("data/counties.geojson", (gj) =>
   L.geoJSON(gj, {
-    style: { color: "#555", weight: 0.6, fill: true, fillOpacity: 0, fillColor: "#000" },
+    style: { color: "#9a9a9a", weight: 0.35, fill: true, fillOpacity: 0, fillColor: "#000" },
     onEachFeature: (f, l) => {
       const p = f.properties;
       l.on("mouseover", (e) => {
-        e.target.setStyle({ weight: 1.6, color: "#000" });
+        e.target.setStyle({ weight: 1.4, color: "#222" });
         let extra = "";
         const x = msaXwalk && msaXwalk[p.GEOID];
         if (x && msaSel === "v1" && x[1]) extra = `<br>V1: ${x[1]}`;
         if (x && msaSel === "v2" && x[3]) extra = `<br>V2: ${x[3]}`;
         showHover(`<b>${p.NAMELSAD}</b>, ${p.STATE_NAME} <span class="tag">FIPS ${p.GEOID}</span>${extra}`);
       });
-      l.on("mouseout", (e) => { e.target.setStyle({ weight: 0.6, color: "#555" }); hideHover(); });
-      l.bindPopup(() =>
-        `<h3>${p.NAMELSAD}</h3>${selectedMsaHeader(p.GEOID)}<div>${p.STATE_NAME} (${p.STUSPS})</div>
-         <div><span class="k">FIPS:</span> ${p.GEOID}</div>${countyMsaHtml(p.GEOID)}`);
+      l.on("mouseout", (e) => { e.target.setStyle({ weight: 0.35, color: "#9a9a9a" }); hideHover(); });
+      l.on("click", (e) => handleCountyClick(p, e.latlng));
     },
   })
 );
@@ -215,8 +218,8 @@ const countiesBase = lazyLayer("data/counties.geojson", (gj) =>
 const counties = {
   async show() {
     await Promise.all([loadXwalk(), countiesBase.show()]);
-    const l = countiesBase.getLayer();
-    if (l && map.hasLayer(l)) l.bringToFront();
+    // At level 1 with no vintage, counties are the only clickable layer.
+    if (msaSel === "none") { const l = countiesBase.getLayer(); if (l && map.hasLayer(l)) l.bringToFront(); }
   },
   hide() { countiesBase.hide(); },
 };
@@ -230,29 +233,109 @@ function makeCbsa(color, vintage) {
         const q = f.properties.ffe_do;
         return {
           color: color,
-          weight: isMsa ? 1.3 : 1.0,
-          dashArray: isMsa ? null : "4 3",
+          weight: isMsa ? 2.6 : 2.0,
+          dashArray: isMsa ? null : "5 4",
           fill: true,
           fillColor: q ? "#1f8a70" : color,
-          fillOpacity: q ? (isMsa ? 0.5 : 0.4) : (isMsa ? 0.06 : 0.02),
+          fillOpacity: q ? (isMsa ? 0.5 : 0.4) : (isMsa ? 0.08 : 0.04),
         };
       },
       onEachFeature: (f, l) => {
         const p = f.properties;
         const isMsa = p.kind !== "non-MSA";
         const label = isMsa ? "Metropolitan Statistical Area (MSA)" : "Non-MSA area";
-        const baseWeight = isMsa ? 1.3 : 1.0;
+        const baseWeight = isMsa ? 2.6 : 2.0;
         const tag = p.ffe_do ? `${label} &mdash; qualifying FFE energy community` : label;
-        l.on("mouseover", (e) => { e.target.setStyle({ weight: 2.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${tag}</span>`); });
+        l.on("mouseover", (e) => { e.target.setStyle({ weight: baseWeight + 1.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${tag}</span>`); });
         l.on("mouseout", (e) => { e.target.setStyle({ weight: baseWeight }); hideHover(); });
-        l.bindPopup(`<h3>${p.NAME}</h3><div>${label}</div>
-          <div><span class="k">Area code:</span> ${p.GEOID}</div>
-          <div class="elig"><span class="k">FFE energy community (${vintage}):</span> ${p.ffe_do ? '<span class="yes">&#10003; Qualifies</span>' : '<span class="no">&#10007; Not qualifying</span>'}</div>`);
+        l.on("click", (e) => selectArea(p.GEOID, e.latlng));
       },
     });
 }
 const cbsaV1 = lazyLayer("data/cbsa_v1_2010.geojson", makeCbsa("#6a3d9a", "2010 / Vintage 1"));
 const cbsaV2 = lazyLayer("data/cbsa_v2_2020.geojson", makeCbsa("#1f6fb2", "2020 / Vintage 2"));
+
+/* ---------- Two-level drill: MSA/non-MSA (level 1) -> counties (level 2) ----------
+   Level 1: MSA/non-MSA regions are the clickable layer (thick borders).
+   Clicking a region highlights its border, shows its info, and arms its
+   counties. Level 2: clicking inside the focused area selects a county;
+   clicking into a different area refocuses to that area's MSA. */
+let drillMsa = null;        // GEOID of the focused area, or null at level 1
+let highlightLayer = null;  // non-interactive outline drawn over the focused area
+let activeCbsa = null;      // { vintage } metadata for the shown vintage
+const msaByCode = {};       // GEOID -> cbsa sublayer (geometry + properties)
+
+function buildMsaIndex(geoLayer, vintage) {
+  for (const k in msaByCode) delete msaByCode[k];
+  activeCbsa = { vintage };
+  if (geoLayer) geoLayer.eachLayer((sub) => { msaByCode[sub.feature.properties.GEOID] = sub; });
+}
+
+function msaPopupHtml(p) {
+  const isMsa = p.kind !== "non-MSA";
+  const label = isMsa ? "Metropolitan Statistical Area (MSA)" : "Non-MSA area";
+  const vintage = activeCbsa ? activeCbsa.vintage : "";
+  return `<h3>${p.NAME}</h3><div>${label}</div>
+    <div><span class="k">Area code:</span> ${p.GEOID}</div>
+    <div class="elig"><span class="k">FFE energy community (${vintage}):</span> ${p.ffe_do ? '<span class="yes">&#10003; Qualifies</span>' : '<span class="no">&#10007; Not qualifying</span>'}</div>
+    <div class="drill-hint">Click inside this area to inspect its counties.</div>`;
+}
+
+function vintageCode(geoid) {
+  const x = msaXwalk && msaXwalk[geoid];
+  if (!x) return null;
+  return msaSel === "v1" ? x[0] : msaSel === "v2" ? x[2] : null;
+}
+
+function drawHighlight(geoid) {
+  if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
+  const sub = msaByCode[geoid];
+  if (!sub) return;
+  highlightLayer = L.geoJSON(sub.feature, {
+    interactive: false,
+    style: { color: "#e8590c", weight: 4, fill: false, dashArray: null },
+  }).addTo(map);
+}
+
+function selectArea(geoid, latlng) {
+  const sub = msaByCode[geoid];
+  if (!sub) return;
+  drillMsa = geoid;
+  drawHighlight(geoid);
+  const cl = countiesBase.getLayer();          // counties become the clickable layer
+  if (cl && map.hasLayer(cl)) cl.bringToFront();
+  if (highlightLayer) highlightLayer.bringToFront();
+  L.popup({ autoPan: true }).setLatLng(latlng).setContent(msaPopupHtml(sub.feature.properties)).openOn(map);
+  backBtn.style.display = "block";
+}
+
+function handleCountyClick(p, latlng) {
+  const openCounty = () => L.popup().setLatLng(latlng).setContent(countyPopupHtml(p)).openOn(map);
+  if (msaSel !== "v1" && msaSel !== "v2") { openCounty(); return; }
+  const code = vintageCode(p.GEOID);
+  if (code && code === drillMsa) openCounty();          // inside focused area -> county detail
+  else if (code && msaByCode[code]) selectArea(code, latlng); // different area -> refocus
+  else openCounty();                                     // unmapped (e.g. CT planning regions)
+}
+
+function enterLevel1() {
+  drillMsa = null;
+  if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
+  backBtn.style.display = "none";
+  const lz = msaSel === "v1" ? cbsaV1 : msaSel === "v2" ? cbsaV2 : null;
+  const gl = lz && lz.getLayer();
+  if (gl && map.hasLayer(gl)) gl.bringToFront();        // MSA regions clickable at level 1
+}
+
+function backToAreas() { map.closePopup(); enterLevel1(); }
+
+const backBtn = document.createElement("button");
+backBtn.id = "backBtn";
+backBtn.type = "button";
+backBtn.innerHTML = "&#8624; Back to areas";
+backBtn.style.display = "none";
+backBtn.addEventListener("click", backToAreas);
+document.body.appendChild(backBtn);
 
 /* ---------- Nuclear sites (shared loader, two display layers + table) ---------- */
 let nucData = null, nucPromise = null;
@@ -437,11 +520,25 @@ document.querySelectorAll('input[name="msa"]').forEach((r) => {
   r.addEventListener("change", async () => {
     if (!r.checked) return;
     msaSel = r.value;
+    // reset any drill state from the previous vintage
+    map.closePopup();
+    if (highlightLayer) { map.removeLayer(highlightLayer); highlightLayer = null; }
+    drillMsa = null;
+    backBtn.style.display = "none";
     cbsaV1.hide(); cbsaV2.hide();
-    if (r.value === "v1") await cbsaV1.show();
-    if (r.value === "v2") await cbsaV2.show();
-    syncCounties(); // keep county outlines on top & clickable over MSA fills
+    if (r.value === "none") { buildMsaIndex(null); syncCounties(); return; }
+    const lz = r.value === "v1" ? cbsaV1 : cbsaV2;
+    const vintage = r.value === "v1" ? "2010 / Vintage 1" : "2020 / Vintage 2";
+    await lz.show();
+    await counties.show();            // thin county lines present for level-2 drilling
+    buildMsaIndex(lz.getLayer(), vintage);
+    enterLevel1();                     // MSA/non-MSA borders on top & clickable (level 1)
   });
+});
+
+/* Esc returns from a drilled-in area to the MSA/non-MSA level (when no modal is open) */
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && !tableModal.classList.contains("open") && drillMsa) backToAreas();
 });
 
 /* mobile panel toggle */
