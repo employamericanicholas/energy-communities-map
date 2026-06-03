@@ -61,6 +61,7 @@ html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystem
 .leaflet-popup-content { font-size: 13px; line-height: 1.45; margin: 11px 14px; }
 .leaflet-popup-content h3 { margin: 0 0 5px; font-size: 14px; }
 .leaflet-popup-content .k { color: #777; }
+.leaflet-popup-content .msa-head { margin: 0 0 6px; font-size: 13.5px; font-weight: 700; color: #11304e; }
 .pill { display:inline-block; padding:1px 7px; border-radius:10px; font-size:11px; color:#fff; }
 
 .leaflet-popup-content .elig { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; }

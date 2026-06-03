@@ -177,6 +177,19 @@ function countyMsaHtml(geoid) {
     <div><span class="k">Vintage 2 (2020-based):</span> ${msaEntry(x[2], x[3], isCT)}</div>`;
 }
 
+/* Prominent line for the currently-selected vintage's MSA/non-MSA, shown
+   directly under the county name when a V1 or V2 layer is active. */
+function selectedMsaHeader(geoid) {
+  if (msaSel !== "v1" && msaSel !== "v2") return "";
+  const x = msaXwalk && msaXwalk[geoid];
+  if (!x) return "";
+  const isCT = geoid.startsWith("09");
+  const code = msaSel === "v1" ? x[0] : x[2];
+  const name = msaSel === "v1" ? x[1] : x[3];
+  const label = msaSel === "v1" ? "Vintage 1" : "Vintage 2";
+  return `<div class="msa-head">${msaEntry(code, name, isCT)} <span class="k">· ${label}</span></div>`;
+}
+
 /* ---------- Counties (reference outline) ---------- */
 const countiesBase = lazyLayer("data/counties.geojson", (gj) =>
   L.geoJSON(gj, {
@@ -193,7 +206,7 @@ const countiesBase = lazyLayer("data/counties.geojson", (gj) =>
       });
       l.on("mouseout", (e) => { e.target.setStyle({ weight: 0.6, color: "#555" }); hideHover(); });
       l.bindPopup(() =>
-        `<h3>${p.NAMELSAD}</h3><div>${p.STATE_NAME} (${p.STUSPS})</div>
+        `<h3>${p.NAMELSAD}</h3>${selectedMsaHeader(p.GEOID)}<div>${p.STATE_NAME} (${p.STUSPS})</div>
          <div><span class="k">FIPS:</span> ${p.GEOID}</div>${countyMsaHtml(p.GEOID)}`);
     },
   })
