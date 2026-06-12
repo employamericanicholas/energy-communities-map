@@ -73,8 +73,17 @@ def main():
         sf.close()
         missing += sorted(geoids - found)
 
+    # Tag every tract with the notice that first listed it, so the app can
+    # show the 2025-31 vs 2026-39 coal footprint. The 54 tracts new in
+    # Notice 2026-39 have src "2026-39_App2" (and no earlier source).
+    n26 = 0
+    for f in gj["features"]:
+        src = ct.get(f["properties"]["GEOID"], {}).get("src", [])
+        f["properties"]["since"] = "2026-39" if any("2026-39" in s for s in src) else "2025-31"
+        n26 += f["properties"]["since"] == "2026-39"
+
     json.dump(gj, open(GEO, "w"))
-    print(f"added={added}  total_features={len(gj['features'])}  unmatched={len(missing)} {missing}")
+    print(f"added={added}  total_features={len(gj['features'])}  since_2026-39={n26}  unmatched={len(missing)} {missing}")
 
 
 if __name__ == "__main__":

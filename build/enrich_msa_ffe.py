@@ -17,14 +17,11 @@ D = os.path.join(ROOT, "docs", "data")
 XW = os.path.join(ROOT, "build", "src_xwalk", "EC_MSA_V1_V2.xlsx")
 
 
-def main():
-    do = json.load(open(os.path.join(ROOT, "data", "ffe_do.json")))
+def qualifying_codes(do, rows):
+    """Return (v1_codes, v2_codes) area codes that qualify, for one notice."""
     qual_v1 = {f for f, v in do.items() if v["v1"]}
     qual_v2 = {f for f, v in do.items() if v["v2"]}
-
-    ws = openpyxl.load_workbook(XW, read_only=True, data_only=True).active
-    rows = list(ws.iter_rows(values_only=True))[2:]
-    codes_v1, codes_v2 = set(), set()  # area codes that qualify
+    codes_v1, codes_v2 = set(), set()
     for r in rows:
         if r[0] is None:
             continue
@@ -33,17 +30,31 @@ def main():
             codes_v1.add(int(r[4]))
         if r[6] is not None and fips in qual_v2:
             codes_v2.add(int(r[6]))
+    return codes_v1, codes_v2
 
-    for fn, codes in [("cbsa_v1_2010", codes_v1), ("cbsa_v2_2020", codes_v2)]:
+
+def main():
+    do25 = json.load(open(os.path.join(ROOT, "data", "ffe_do_2531.json")))
+    do26 = json.load(open(os.path.join(ROOT, "data", "ffe_do_2639.json")))
+    ws = openpyxl.load_workbook(XW, read_only=True, data_only=True).active
+    rows = list(ws.iter_rows(values_only=True))[2:]
+    v1_25, v2_25 = qualifying_codes(do25, rows)
+    v1_26, v2_26 = qualifying_codes(do26, rows)
+
+    # cbsa_v1 uses Vintage-1 codes; cbsa_v2 uses Vintage-2 codes. Each region
+    # gets a qualifying flag per notice.
+    for fn, c25, c26 in [("cbsa_v1_2010", v1_25, v1_26), ("cbsa_v2_2020", v2_25, v2_26)]:
         path = os.path.join(D, fn + ".geojson")
         gj = json.load(open(path))
-        n = 0
+        n25 = n26 = 0
         for f in gj["features"]:
-            q = int(f["properties"]["GEOID"]) in codes
-            f["properties"]["ffe_do"] = q
-            n += q
+            code = int(f["properties"]["GEOID"])
+            f["properties"]["ffe_do_2531"] = code in c25
+            f["properties"]["ffe_do_2639"] = code in c26
+            f["properties"].pop("ffe_do", None)
+            n25 += code in c25; n26 += code in c26
         json.dump(gj, open(path, "w"))
-        print(f"{fn}: {n}/{len(gj['features'])} regions qualify as FFE energy communities")
+        print(f"{fn}: qualifying regions  2531={n25}  2639={n26}  (of {len(gj['features'])})")
 
 
 if __name__ == "__main__":

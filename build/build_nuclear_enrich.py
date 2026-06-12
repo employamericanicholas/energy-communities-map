@@ -115,7 +115,7 @@ def main():
     cty = index_layer(os.path.join(D, "counties.geojson"))
 
     gj = json.load(open(os.path.join(D, "nuclear.geojson")))
-    n_ffe = n_un = n_coal = 0
+    n_un25 = n_un26 = n_coal25 = n_coal26 = 0
     for f in gj["features"]:
         p = f["properties"]
         lon, lat = f["geometry"]["coordinates"]
@@ -125,14 +125,24 @@ def main():
         p["county"] = cc.get("NAMELSAD", "")
         p["state"] = cc.get("STATE_NAME", "")
         fc = locate(pt, *ffe)
-        p["ffe"] = bool(fc and (fc.get("do") or fc.get("may")))
-        p["ffe_unemp"] = bool(fc and fc.get("do"))
-        p["coal"] = locate(pt, *coal) is not None
-        n_ffe += p["ffe"]; n_un += p["ffe_unemp"]; n_coal += p["coal"]
+        # FFE threshold (meets 0.17%) is shared across notices; currently-
+        # qualifying (threshold + unemployment) differs by notice vintage.
+        p["ffe"] = bool(fc and (fc.get("do_2531") or fc.get("do_2639") or fc.get("may")))
+        p["ffe_unemp_2531"] = bool(fc and fc.get("do_2531"))
+        p["ffe_unemp_2639"] = bool(fc and fc.get("do_2639"))
+        ctract = locate(pt, *coal)
+        # Coal footprint grows over notices; a tract new in 2026-39 counts
+        # only for that notice.
+        p["coal_2639"] = ctract is not None
+        p["coal_2531"] = bool(ctract and ctract.get("since") != "2026-39")
+        for k in ("ffe_unemp", "coal"):
+            p.pop(k, None)
+        n_un25 += p["ffe_unemp_2531"]; n_un26 += p["ffe_unemp_2639"]
+        n_coal25 += p["coal_2531"]; n_coal26 += p["coal_2639"]
 
     with open(os.path.join(D, "nuclear.geojson"), "w") as f:
         json.dump(gj, f)
-    print(f"plants={len(gj['features'])}  ffe={n_ffe}  ffe_unemp={n_un}  coal={n_coal}")
+    print(f"plants={len(gj['features'])}  ffe_unemp 2531={n_un25} 2639={n_un26}  coal 2531={n_coal25} 2639={n_coal26}")
     unknown = [f["properties"]["name"] for f in gj["features"] if f["properties"]["owner"] == "Unknown"]
     if unknown:
         print("owner still Unknown:", unknown)

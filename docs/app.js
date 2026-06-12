@@ -6,7 +6,7 @@ const map = L.map("map", { preferCanvas: true, minZoom: 3, maxZoom: 12 })
 
 L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
   attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> | Boundaries: U.S. Census Bureau | Eligibility: IRS Notice 2025-31',
+    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> | Boundaries: U.S. Census Bureau | Eligibility: IRS Notice 2026-39 / 2025-31',
   subdomains: "abcd", maxZoom: 19,
 }).addTo(map);
 
@@ -55,10 +55,60 @@ function setCount(id, n) {
   if (el) el.textContent = "(" + n.toLocaleString() + ")";
 }
 
+/* ---------- IRS notice version (eligibility-data vintage) ----------
+   "2639" = Notice 2026-39 (June 2026, 2025 unemployment); "2531" = Notice
+   2025-31 (June 2025, 2024 unemployment). Switching re-renders every
+   eligibility layer. The diff layer highlights what changed between them. */
+let notice = "2639";
+const NOTICE_LABEL = { "2531": "Notice 2025-31", "2639": "Notice 2026-39" };
+
+/* Version-aware layer: caches its GeoJSON, (re)builds with the current
+   notice, and rebuilds in place when the notice changes. */
+function versioned(loader, build) {
+  return {
+    layer: null, data: null,
+    async show() {
+      const gj = await loader();
+      if (!gj) return;
+      this.data = gj;
+      if (!this.layer) this.layer = build(gj);
+      if (!map.hasLayer(this.layer)) this.layer.addTo(map);
+    },
+    hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
+    refresh() {
+      if (!this.data) return;
+      const vis = this.layer && map.hasLayer(this.layer);
+      if (vis) map.removeLayer(this.layer);
+      this.layer = build(this.data);
+      if (vis) this.layer.addTo(map);
+    },
+  };
+}
+
+function cachedFetch(url) {
+  let data = null, promise = null;
+  return () => {
+    if (data) return Promise.resolve(data);
+    if (!promise) {
+      load(true);
+      promise = fetch(url)
+        .then((r) => { if (!r.ok) throw new Error(url + " " + r.status); return r.json(); })
+        .then((gj) => { data = gj; return gj; })
+        .catch((e) => { console.error(e); alert("Could not load " + url + "\n" + e.message); })
+        .finally(() => load(false));
+    }
+    return promise;
+  };
+}
+
 /* ---------- Coal closure tracts ---------- */
-const coal = lazyLayer("data/coal_tracts.geojson", (gj) => {
-  setCount("cnt_coal", gj.features.length);
+const loadCoal = cachedFetch("data/coal_tracts.geojson");
+// 2025-31 footprint excludes tracts first listed in Notice 2026-39.
+const coalVisible = (f) => notice === "2639" || f.properties.since !== "2026-39";
+const coal = versioned(loadCoal, (gj) => {
+  setCount("cnt_coal", gj.features.filter(coalVisible).length);
   return L.geoJSON(gj, {
+    filter: coalVisible,
     style: (f) => ({
       color: "#5a1f0c", weight: 0.4,
       fillColor: COAL_COLORS[f.properties.type] || "#c0532b",
@@ -72,7 +122,8 @@ const coal = lazyLayer("data/coal_tracts.geojson", (gj) => {
         `<h3>Coal closure census tract</h3>
          <div><span class="k">Tract:</span> ${p.tract}</div>
          <div><span class="k">FIPS:</span> ${p.GEOID}</div>
-         <div><span class="k">Type:</span> ${p.detail || p.type}</div>`);
+         <div><span class="k">Type:</span> ${p.detail || p.type}</div>
+         ${p.since === "2026-39" ? '<div><span class="k">Added:</span> Notice 2026-39</div>' : ""}`);
     },
   });
 });
@@ -84,63 +135,96 @@ function loadFFE() {
     load(true);
     ffePromise = fetch("data/ffe_counties.geojson")
       .then((r) => r.json())
-      .then((gj) => {
-        ffeData = gj;
-        setCount("cnt_ffe_do", gj.features.filter((f) => f.properties.do).length);
-        setCount("cnt_ffe_may", gj.features.filter((f) => f.properties.may && !f.properties.do).length);
-        return gj;
-      })
+      .then((gj) => { ffeData = gj; refreshFfeCounts(); return gj; })
       .finally(() => load(false));
   }
   return ffePromise;
 }
+const ffeDoKey = () => "do_" + notice;
+function refreshFfeCounts() {
+  if (!ffeData) return;
+  const k = ffeDoKey();
+  setCount("cnt_ffe_do", ffeData.features.filter((f) => f.properties[k]).length);
+  setCount("cnt_ffe_may", ffeData.features.filter((f) => f.properties.may && !f.properties[k]).length);
+}
 
 function ffePopup(p) {
-  const status = p.do
+  const isDo = p[ffeDoKey()];
+  const status = isDo
     ? `<span class="pill" style="background:#1f8a70">Qualifying energy community</span>`
     : `<span class="pill" style="background:#f0b400;color:#3a2700">Meets FFE employment threshold — not currently qualifying (unemployment below national-average threshold)</span>`;
   let v = "";
-  if (p.do) v = `<div><span class="k">Eligible under:</span> ${[p.v1 ? "Vintage 1 (2010-based)" : null, p.v2 ? "Vintage 2 (2020-based)" : null].filter(Boolean).join(", ") || "—"}</div>`;
+  if (isDo) v = `<div><span class="k">Eligible under:</span> ${[p["v1_" + notice] ? "Vintage 1 (2010-based)" : null, p["v2_" + notice] ? "Vintage 2 (2020-based)" : null].filter(Boolean).join(", ") || "—"}</div>`;
   return `<h3>${p.name}, ${p.state}</h3>${status}
-    <div style="margin-top:5px"><span class="k">County FIPS:</span> ${p.GEOID}</div>${v}`;
+    <div style="margin-top:5px"><span class="k">County FIPS:</span> ${p.GEOID}</div>${v}
+    <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]}</div>`;
 }
 
-const ffeDo = {
-  layer: null,
-  async show() {
-    await loadFFE();
-    if (!this.layer) {
-      this.layer = L.geoJSON(ffeData, {
-        filter: (f) => f.properties.do,
-        style: { color: "#0c5", weight: 0.5, fillColor: "#1f8a70", fillOpacity: 0.55 },
-        onEachFeature: (f, l) => {
-          const p = f.properties;
-          l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">FFE qualifying</span>`));
-          l.on("mouseout", hideHover);
-          l.bindPopup(ffePopup(p));
-        },
-      });
-    }
-    if (!map.hasLayer(this.layer)) this.layer.addTo(map);
+const ffeDo = versioned(loadFFE, (gj) => L.geoJSON(gj, {
+  filter: (f) => f.properties[ffeDoKey()],
+  style: { color: "#0c5", weight: 0.5, fillColor: "#1f8a70", fillOpacity: 0.55 },
+  onEachFeature: (f, l) => {
+    const p = f.properties;
+    l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">FFE qualifying</span>`));
+    l.on("mouseout", hideHover);
+    l.bindPopup(ffePopup(p));
   },
-  hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
-};
+}));
 
-const ffeMay = {
+const ffeMay = versioned(loadFFE, (gj) => L.geoJSON(gj, {
+  filter: (f) => f.properties.may && !f.properties[ffeDoKey()],
+  style: { color: "#9c7400", weight: 0.5, fillColor: "#f0b400", fillOpacity: 0.55 },
+  onEachFeature: (f, l) => {
+    const p = f.properties;
+    l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">Meets FFE threshold — not qualifying</span>`));
+    l.on("mouseout", hideHover);
+    l.bindPopup(ffePopup(p));
+  },
+}));
+
+/* ---------- "What changed" diff: Notice 2025-31 -> 2026-39 ----------
+   FFE counties that gained/lost qualifying status, plus coal tracts first
+   listed in 2026-39. Independent of the selected notice version. */
+const diffLayer = {
   layer: null,
   async show() {
-    await loadFFE();
+    const [ffe, cgj] = await Promise.all([loadFFE(), loadCoal()]);
+    if (!ffe || !cgj) return;
     if (!this.layer) {
-      this.layer = L.geoJSON(ffeData, {
-        filter: (f) => f.properties.may && !f.properties.do,
-        style: { color: "#9c7400", weight: 0.5, fillColor: "#f0b400", fillOpacity: 0.55 },
+      const grp = L.layerGroup();
+      let dropped = 0, added = 0;
+      L.geoJSON(ffe, {
+        filter: (f) => f.properties.do_2531 !== f.properties.do_2639,
+        style: (f) => f.properties.do_2639
+          ? { color: "#0a7d5a", weight: 0.6, fillColor: "#13b886", fillOpacity: 0.65 }
+          : { color: "#9e1b1b", weight: 0.6, fillColor: "#e23b3b", fillOpacity: 0.65 },
+        onEachFeature: (f, l) => {
+          const p = f.properties, isAdd = p.do_2639;
+          isAdd ? added++ : dropped++;
+          l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">${isAdd ? "Added in 2026-39" : "Dropped in 2026-39"}</span>`));
+          l.on("mouseout", hideHover);
+          l.bindPopup(`<h3>${p.name}, ${p.state}</h3>` + (isAdd
+            ? `<div><span class="yes">&#10003; Newly qualifying</span> under Notice 2026-39 (did not qualify under 2025-31).</div>`
+            : `<div><span class="no">&#10007; No longer qualifying</span> under Notice 2026-39 (qualified under 2025-31).</div>`)
+            + `<div><span class="k">County FIPS:</span> ${p.GEOID}</div>`);
+        },
+      }).addTo(grp);
+      L.geoJSON(cgj, {
+        filter: (f) => f.properties.since === "2026-39",
+        style: { color: "#7a3d00", weight: 0.6, fillColor: "#ff8c1a", fillOpacity: 0.85 },
         onEachFeature: (f, l) => {
           const p = f.properties;
-          l.on("mouseover", () => showHover(`<b>${p.name}, ${p.state}</b><span class="tag">Meets FFE threshold — not qualifying</span>`));
+          l.on("mouseover", () => showHover(`<b>New coal closure tract (2026-39)</b> — ${p.tract}`));
           l.on("mouseout", hideHover);
-          l.bindPopup(ffePopup(p));
+          l.bindPopup(`<h3>New coal closure tract</h3>
+            <div><span class="k">Added:</span> Notice 2026-39</div>
+            <div><span class="k">Tract:</span> ${p.tract}</div>
+            <div><span class="k">FIPS:</span> ${p.GEOID}</div>
+            <div><span class="k">Type:</span> ${p.detail || p.type}</div>`);
         },
-      });
+      }).addTo(grp);
+      this.layer = grp;
+      setCount("cnt_diff", added + dropped + cgj.features.filter((f) => f.properties.since === "2026-39").length);
     }
     if (!map.hasLayer(this.layer)) this.layer.addTo(map);
   },
@@ -225,35 +309,49 @@ const counties = {
 };
 
 /* ---------- CBSA / MSA boundaries (two vintages) ---------- */
-function makeCbsa(color, vintage) {
+function cbsaStyle(color) {
+  return (f) => {
+    const isMsa = f.properties.kind !== "non-MSA";
+    const q = f.properties["ffe_do_" + notice];
+    return {
+      color: color,
+      weight: isMsa ? 2.6 : 2.0,
+      dashArray: isMsa ? null : "5 4",
+      fill: true,
+      fillColor: q ? "#1f8a70" : color,
+      fillOpacity: q ? (isMsa ? 0.5 : 0.4) : (isMsa ? 0.08 : 0.04),
+    };
+  };
+}
+function makeCbsa(color) {
+  const styleFn = cbsaStyle(color);
   return (gj) =>
     L.geoJSON(gj, {
-      style: (f) => {
-        const isMsa = f.properties.kind !== "non-MSA";
-        const q = f.properties.ffe_do;
-        return {
-          color: color,
-          weight: isMsa ? 2.6 : 2.0,
-          dashArray: isMsa ? null : "5 4",
-          fill: true,
-          fillColor: q ? "#1f8a70" : color,
-          fillOpacity: q ? (isMsa ? 0.5 : 0.4) : (isMsa ? 0.08 : 0.04),
-        };
-      },
+      style: styleFn,
       onEachFeature: (f, l) => {
         const p = f.properties;
         const isMsa = p.kind !== "non-MSA";
         const label = isMsa ? "Metropolitan Statistical Area (MSA)" : "Non-MSA area";
         const baseWeight = isMsa ? 2.6 : 2.0;
-        const tag = p.ffe_do ? `${label} &mdash; qualifying FFE energy community` : label;
-        l.on("mouseover", (e) => { e.target.setStyle({ weight: baseWeight + 1.6 }); showHover(`<b>${p.NAME}</b><span class="tag">${tag}</span>`); });
+        l.on("mouseover", (e) => {
+          e.target.setStyle({ weight: baseWeight + 1.6 });
+          const tag = p["ffe_do_" + notice] ? `${label} &mdash; qualifying FFE energy community` : label;
+          showHover(`<b>${p.NAME}</b><span class="tag">${tag}</span>`);
+        });
         l.on("mouseout", (e) => { e.target.setStyle({ weight: baseWeight }); hideHover(); });
         l.on("click", (e) => selectArea(p.GEOID, e.latlng));
       },
     });
 }
-const cbsaV1 = lazyLayer("data/cbsa_v1_2010.geojson", makeCbsa("#6a3d9a", "2010 / Vintage 1"));
-const cbsaV2 = lazyLayer("data/cbsa_v2_2020.geojson", makeCbsa("#1f6fb2", "2020 / Vintage 2"));
+const cbsaV1 = lazyLayer("data/cbsa_v1_2010.geojson", makeCbsa("#6a3d9a"));
+const cbsaV2 = lazyLayer("data/cbsa_v2_2020.geojson", makeCbsa("#1f6fb2"));
+const cbsaStyleByVintage = { v1: cbsaStyle("#6a3d9a"), v2: cbsaStyle("#1f6fb2") };
+function restyleCbsa() {
+  [["v1", cbsaV1], ["v2", cbsaV2]].forEach(([v, lz]) => {
+    const l = lz.getLayer();
+    if (l && map.hasLayer(l)) l.setStyle(cbsaStyleByVintage[v]);
+  });
+}
 
 /* ---------- Two-level drill: MSA/non-MSA (level 1) -> counties (level 2) ----------
    Level 1: MSA/non-MSA regions are the clickable layer (thick borders).
@@ -277,7 +375,8 @@ function msaPopupHtml(p) {
   const vintage = activeCbsa ? activeCbsa.vintage : "";
   return `<h3>${p.NAME}</h3><div>${label}</div>
     <div><span class="k">Area code:</span> ${p.GEOID}</div>
-    <div class="elig"><span class="k">FFE energy community (${vintage}):</span> ${p.ffe_do ? '<span class="yes">&#10003; Qualifies</span>' : '<span class="no">&#10007; Not qualifying</span>'}</div>
+    <div class="elig"><span class="k">FFE energy community (${vintage}):</span> ${p["ffe_do_" + notice] ? '<span class="yes">&#10003; Qualifies</span>' : '<span class="no">&#10007; Not qualifying</span>'}</div>
+    <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]}</div>
     <div class="drill-hint">Click inside this area to inspect its counties.</div>`;
 }
 
@@ -352,12 +451,15 @@ function nucLabel(p) {
     : p.status || "Licensed / proposed";
 }
 
+const nucUnemp = (p) => p["ffe_unemp_" + notice];
+const nucCoal = (p) => p["coal_" + notice];
 function nucPopup(p) {
   return `<h3>${p.name}</h3><div>${nucLabel(p)}</div>
     <div><span class="k">Owner:</span> ${p.owner || "—"}</div>
     ${p.county ? `<div><span class="k">Location:</span> ${p.county}, ${p.state}</div>` : ""}
     ${p.dissolved ? `<div><span class="k">Closed:</span> ${String(p.dissolved).slice(0, 4)}</div>` : ""}
-    <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(p.ffe_unemp)}<span class="k">Coal:</span> ${yn(p.coal)}</div>`;
+    <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(nucUnemp(p))}<span class="k">Coal:</span> ${yn(nucCoal(p))}</div>
+    <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]}</div>`;
 }
 
 /* Plant markers live in their own high pane so they stay above the polygon
@@ -389,7 +491,7 @@ function loadNuclear() {
           });
           m.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${nucLabel(p)}</span>`));
           m.on("mouseout", hideHover);
-          m.bindPopup(nucPopup(p));
+          m.bindPopup(() => nucPopup(p));
           markersByName[p.name] = m;
           catByName[p.name] = p.category;
         });
@@ -466,6 +568,23 @@ function bind(id, ctrl) {
 bind("lyr_coal", coal);
 bind("lyr_ffe_do", ffeDo);
 bind("lyr_ffe_may", ffeMay);
+bind("lyr_diff", diffLayer);
+
+/* ---------- Eligibility data version (IRS notice) ---------- */
+function setNotice(v) {
+  if (v === notice) return;
+  notice = v;
+  coal.refresh();          // also refreshes cnt_coal
+  ffeDo.refresh();
+  ffeMay.refresh();
+  refreshFfeCounts();
+  restyleCbsa();
+  map.closePopup();
+  if (tableModal.classList.contains("open")) buildTable();
+}
+document.querySelectorAll('input[name="notice"]').forEach((r) => {
+  r.addEventListener("change", () => { if (r.checked) setNotice(r.value); });
+});
 
 /* Counties show when their checkbox is on OR an MSA vintage layer is active,
    so MSA regions stay clickable at the county level. */
@@ -547,9 +666,10 @@ function updateSelUI() {
 function buildTable() {
   const tbody = document.querySelector("#nucTable tbody");
   const statusText = (p) => p.status || (p.category === "former" ? "Former" : "Operating");
+  const cell = (p, k) => k === "ffe_unemp" ? nucUnemp(p) : k === "coal" ? nucCoal(p) : p[k];
   const val = (p, k) => (k === "status" ? statusText(p).toLowerCase()
     : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
-    : p[k] ? 1 : 0);
+    : cell(p, k) ? 1 : 0);
   let feats = [...nucData.features];
   if (showSelectedOnly) feats = feats.filter((f) => selected.has(f.properties.name));
   feats.sort((a, b) => {
@@ -562,8 +682,10 @@ function buildTable() {
     const chk = selected.has(p.name) ? " checked" : "";
     return `<tr><td class="sel"><input type="checkbox" data-name="${attr(p.name)}"${chk}></td>` +
       `<td>${p.name}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${statusText(p)}</td>` +
-      `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(p.ffe_unemp)}</td><td class="c">${yn(p.coal)}</td></tr>`;
+      `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(nucUnemp(p))}</td><td class="c">${yn(nucCoal(p))}</td></tr>`;
   }).join("");
+  const tn = document.getElementById("tableNotice");
+  if (tn) tn.textContent = NOTICE_LABEL[notice];
   updateSelUI();
 }
 

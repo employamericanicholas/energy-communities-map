@@ -7,7 +7,7 @@
 <meta name="description" content="Interactive map of IRS Energy Community eligibility: coal closure census tracts, fossil fuel employment (FFE) counties, MSA/non-MSA boundaries (2010 & 2020 OMB vintages), U.S. counties, and nuclear power plant sites." />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<link rel="stylesheet" href="styles.css?v=20260611" />
+<link rel="stylesheet" href="styles.css?v=20260611b" />
 </head>
 <body>
 <div id="map"></div>
@@ -23,6 +23,13 @@
   <div class="panel-body">
     <section class="group">
       <h2>Energy Community eligibility</h2>
+
+      <div class="notice-toggle">
+        <span class="msa-label">Eligibility data version (IRS notice):</span>
+        <label class="radio"><input type="radio" name="notice" value="2639" checked> Notice&nbsp;2026-39 <span class="tiny">(current · 2025 unemployment)</span></label>
+        <label class="radio"><input type="radio" name="notice" value="2531"> Notice&nbsp;2025-31 <span class="tiny">(prior · 2024 unemployment)</span></label>
+      </div>
+      <p class="note">Switches the coal, FFE, and region layers (and the plant table) between the two most recent IRS energy-community notices. Use the highlight layer below to see exactly what changed.</p>
 
       <label class="layer"><input type="checkbox" id="lyr_coal" checked>
         <span class="swatch" style="background:#c0532b"></span>
@@ -42,6 +49,16 @@
         <span class="swatch" style="background:#f0b400"></span>
         FFE — meets employment threshold, not currently qualifying <span class="cnt" id="cnt_ffe_may"></span></label>
       <p class="note">Counties meeting the Fossil Fuel Employment threshold but <em>not</em> the unemployment-rate requirement (unemployment below the national-average threshold), so not currently qualifying energy communities.</p>
+
+      <label class="layer"><input type="checkbox" id="lyr_diff">
+        <span class="swatch" style="background:#13b886"></span>
+        What changed: 2025-31 &rarr; 2026-39 <span class="cnt" id="cnt_diff"></span></label>
+      <div class="legend-sub" id="leg_diff">
+        <span><i style="background:#13b886"></i>FFE: newly qualifying</span>
+        <span><i style="background:#e23b3b"></i>FFE: dropped out</span>
+        <span><i style="background:#ff8c1a"></i>New coal tract</span>
+      </div>
+      <p class="note">Highlights how Notice&nbsp;2026-39 differs from 2025-31: counties that gained (green) or lost (red) qualifying FFE status under the 2025 unemployment update, plus census tracts newly added to the coal closure list. Independent of the version selector above.</p>
     </section>
 
     <section class="group">
@@ -114,7 +131,7 @@
       <h2>Nuclear power plants &mdash; energy community eligibility</h2>
       <button id="tableClose" aria-label="Close table">&times;</button>
     </div>
-    <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort. Eligibility reflects IRS Notice&nbsp;2026-39 (Statistical Area status applicable as of June&nbsp;10,&nbsp;2026; coal closures cumulative).</p>
+    <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort. Showing eligibility for <strong id="tableNotice">Notice 2026-39</strong> &mdash; change the version in the Layers panel. Coal closures are cumulative.</p>
     <div class="table-toolbar">
       <button id="selOnlyBtn" type="button" disabled>Show only selected</button>
       <button id="selClearBtn" type="button" disabled>Clear selection</button>
@@ -142,6 +159,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=20260611"></script>
+<script src="app.js?v=20260611b"></script>
 </body>
 </html>

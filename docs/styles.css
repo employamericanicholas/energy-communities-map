@@ -37,6 +37,10 @@ html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystem
 .msa-label { display: block; margin-bottom: 4px; color: #333; }
 .radio { display: flex; align-items: center; gap: 7px; padding: 3px 0; cursor: pointer; }
 
+.notice-toggle { font-size: 13px; background: #f2f5f8; border: 1px solid #dde5ec; border-radius: 7px; padding: 8px 10px; margin-bottom: 4px; }
+.notice-toggle .msa-label { font-weight: 600; color: #11304e; }
+.tiny { color: #888; font-size: 11px; }
+
 .sources p { margin: 0 0 7px; font-size: 11.5px; color: #555; line-height: 1.4; }
 .sources .disclaimer { color: #8a5a00; background: #fff7e6; padding: 7px 9px; border-radius: 6px; }
 .sources .applies { color: #11304e; background: #eef3f8; border-left: 3px solid #11304e; padding: 7px 9px; border-radius: 4px; }
