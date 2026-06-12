@@ -33,6 +33,16 @@ for i,row in enumerate(wb.active.iter_rows(values_only=True)):
     if i<2 or not row or row[2] is None: continue
     add(str(row[2]).strip(), str(row[3] or ""), "2025-31_App4")
 wb.close()
+
+# IRS Notice 2026-39 Appendix 2: additional coal closure / adjoining tracts
+# (cumulative). Cols: State, County, 2020 Tract FIPS (idx 2), Tract Type (idx 3), Reason.
+A26="Counties and Census Tracts Eligable for Coal and FFE/IRS 2026 Energy Community Updates/n-26-39-appendix-2.xlsx"
+wb=openpyxl.load_workbook(A26, read_only=True, data_only=True); c=0
+for i,row in enumerate(wb.active.iter_rows(values_only=True)):
+    if i<3 or not row or row[2] is None: continue
+    if add(str(row[2]).strip(), str(row[3] or ""), "2026-39_App2"): c+=1
+wb.close()
+print(f"2026-39_App2: added {c}")
 out={g:{"types":sorted(v["types"]),"src":sorted(v["src"])} for g,v in tracts.items()}
 json.dump(out, open("data/coal_tracts.json","w"))
 print("TOTAL UNIQUE:", len(out), "states:", len(set(g[:2] for g in out)))

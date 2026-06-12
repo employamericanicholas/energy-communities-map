@@ -1,9 +1,13 @@
 import pypdf, openpyxl, re, json, os
-DO="Counties and Census Tracts Eligable for Coal and FFE/Eligible FFE Counties that DO meet Unemployment/MSA_FFEunemployment.xlsx"
+# Currently-qualifying (FFE threshold + unemployment) source. IRS Notice
+# 2026-39 Appendix 1 supersedes the 2025-31 "DO meet" file: it uses 2025
+# calendar-year unemployment rates (status applicable as of June 10, 2026).
+# Same column layout: State FIPS, County FIPS, State, County, V1 YES/NO, V2 YES/NO.
+DO="Counties and Census Tracts Eligable for Coal and FFE/IRS 2026 Energy Community Updates/n-26-39-appendix-1.xlsx"
 MAYDIR="Counties and Census Tracts Eligable for Coal and FFE/Eligible FFE Counties that MAY meet Unemployment Threshold"
 MAYX=os.path.join(MAYDIR,"n-25-31-appendix-2.xlsx")
 
-# ---- DO meet ----
+# ---- DO meet (currently-qualifying energy communities) ----
 do={}
 wb=openpyxl.load_workbook(DO, read_only=True, data_only=True); ws=wb.active
 for i,r in enumerate(ws.iter_rows(values_only=True)):

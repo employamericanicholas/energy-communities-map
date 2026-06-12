@@ -7,7 +7,7 @@
 <meta name="description" content="Interactive map of IRS Energy Community eligibility: coal closure census tracts, fossil fuel employment (FFE) counties, MSA/non-MSA boundaries (2010 & 2020 OMB vintages), U.S. counties, and nuclear power plant sites." />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<link rel="stylesheet" href="styles.css?v=20260603c" />
+<link rel="stylesheet" href="styles.css?v=20260611" />
 </head>
 <body>
 <div id="map"></div>
@@ -98,8 +98,8 @@
 
     <section class="group sources">
       <h2>Sources &amp; notes</h2>
-      <p>Eligibility data: <strong>IRS Notice 2025-31</strong> (and cumulative prior notices 2023-29, 2023-47, 2024-30/48). Coal eligibility is at the <em>census-tract</em> level; FFE at the <em>county</em> level.</p>
-      <p class="applies">Applies only to projects <strong>placed in service after June&nbsp;22,&nbsp;2025</strong> and before the release of the 2026 Annual Statistical Area Category and Coal Closure Category updates.</p>
+      <p>Eligibility data: <strong>IRS Notice 2026-39</strong> (and cumulative prior notices 2023-29, 2023-47, 2024-30/48, 2025-31). Coal eligibility is at the <em>census-tract</em> level; FFE at the <em>county</em> level.</p>
+      <p class="applies">Statistical Area (FFE) eligibility reflects the 2025 calendar-year unemployment rates in Notice&nbsp;2026-39 and is <strong>applicable as of June&nbsp;10,&nbsp;2026</strong>, until the IRS issues its next (2027) update. Coal closure tracts are cumulative through Notice&nbsp;2026-39.</p>
       <p>Boundaries: U.S. Census Bureau cartographic boundary files (counties &amp; CBSAs 2020 and 2023). Nuclear sites: Wikipedia/DBpedia (operating &amp; former commercial power reactors; research, military, and never-built sites excluded), plus NRC Early Site Permit (ESP), Combined License (COL), and advanced-reactor sites from NRC records.</p>
       <p class="disclaimer">Unofficial visualization for research/educational use. Confirm eligibility against the official IRS notices and the DOE/IRS energy community mapping tool.</p>
     </section>
@@ -114,7 +114,7 @@
       <h2>Nuclear power plants &mdash; energy community eligibility</h2>
       <button id="tableClose" aria-label="Close table">&times;</button>
     </div>
-    <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort. Eligibility applies only to projects placed in service after June&nbsp;22,&nbsp;2025 and before the release of the 2026 Annual Statistical Area Category and Coal Closure Category updates.</p>
+    <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort. Eligibility reflects IRS Notice&nbsp;2026-39 (Statistical Area status applicable as of June&nbsp;10,&nbsp;2026; coal closures cumulative).</p>
     <div class="table-toolbar">
       <button id="selOnlyBtn" type="button" disabled>Show only selected</button>
       <button id="selClearBtn" type="button" disabled>Clear selection</button>
@@ -142,6 +142,6 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=20260603c"></script>
+<script src="app.js?v=20260611"></script>
 </body>
 </html>
