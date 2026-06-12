@@ -128,6 +128,17 @@ html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystem
 .table-toolbar button { padding: 6px 11px; font-size: 12.5px; cursor: pointer; border: 1px solid #11304e; background: #fff; color: #11304e; border-radius: 6px; }
 .table-toolbar button:hover:not(:disabled) { background: #11304e; color: #fff; }
 .table-toolbar button:disabled { opacity: .45; cursor: default; }
+.table-toolbar button.active { background: #11304e; color: #fff; }
+
+/* ---- Password gate ---- */
+#gate { position: fixed; inset: 0; z-index: 3000; display: flex; align-items: center; justify-content: center; background: #11304e; padding: 20px; }
+.gate-box { background: #fff; border-radius: 12px; padding: 28px 26px; width: min(380px, 100%); box-shadow: 0 8px 40px rgba(0,0,0,.4); text-align: center; }
+.gate-box h1 { margin: 0 0 6px; font-size: 18px; color: #11304e; }
+.gate-box p { margin: 0 0 14px; font-size: 13px; color: #555; }
+.gate-box input { width: 100%; padding: 10px 12px; font-size: 15px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px; }
+.gate-box button { width: 100%; padding: 10px; font-size: 15px; background: #11304e; color: #fff; border: 0; border-radius: 8px; cursor: pointer; }
+.gate-box button:hover { background: #1b4a78; }
+.gate-err { display: none; color: #c0392b !important; font-size: 12.5px !important; margin: 10px 0 0 !important; }
 .sel-count { font-size: 12.5px; color: #555; font-weight: 600; }
 .sel-count.maxed { color: #c0392b; }
 .sel-hint { font-size: 11.5px; color: #888; margin-left: auto; }

@@ -473,6 +473,7 @@ const nucLayer = L.layerGroup().addTo(map);   // holds the currently-visible mar
 const markersByName = {};                     // plant name -> circleMarker
 const catByName = {};                         // plant name -> category
 const visiblePlants = new Set();              // names currently shown on the map
+const featuredSet = new Set();                // names on the curated watchlist
 
 function loadNuclear() {
   if (!nucPromise) {
@@ -494,8 +495,10 @@ function loadNuclear() {
           m.bindPopup(() => nucPopup(p));
           markersByName[p.name] = m;
           catByName[p.name] = p.category;
+          if (p.featured) featuredSet.add(p.name);
         });
         NUC_CATS.forEach((c) => setCount(NUC_CAT_CNT[c], gj.features.filter((f) => f.properties.category === c).length));
+        setCount("cnt_nuc_featured", featuredSet.size);
         buildPlantPicker();
         return gj;
       })
@@ -606,6 +609,14 @@ NUC_CATS.forEach((cat) => {
   });
 });
 
+/* Featured watchlist: bulk on/off across categories */
+document.getElementById("lyr_nuc_featured").addEventListener("change", async (e) => {
+  const on = e.target.checked;
+  await loadNuclear();
+  featuredSet.forEach((n) => setPlantVisible(n, on));
+  NUC_CATS.forEach(refreshCatCheckbox);
+});
+
 /* Individual-plant picker: lazy-load on open, search, bulk All/None, per-plant toggle */
 const plantPicker = document.getElementById("plantPicker");
 plantPicker.addEventListener("toggle", async () => {
@@ -647,6 +658,7 @@ let tableSort = { key: "name", asc: true };
 const MAX_SEL = 10;
 const selected = new Set();
 let showSelectedOnly = false;
+let featuredOnly = false;
 const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 function updateSelUI() {
@@ -671,6 +683,7 @@ function buildTable() {
     : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
     : cell(p, k) ? 1 : 0);
   let feats = [...nucData.features];
+  if (featuredOnly) feats = feats.filter((f) => f.properties.featured);
   if (showSelectedOnly) feats = feats.filter((f) => selected.has(f.properties.name));
   feats.sort((a, b) => {
     const va = val(a.properties, tableSort.key), vb = val(b.properties, tableSort.key);
@@ -680,8 +693,9 @@ function buildTable() {
   tbody.innerHTML = feats.map((f) => {
     const p = f.properties;
     const chk = selected.has(p.name) ? " checked" : "";
+    const plantName = featuredOnly && p.featured_name ? p.featured_name : p.name;
     return `<tr><td class="sel"><input type="checkbox" data-name="${attr(p.name)}"${chk}></td>` +
-      `<td>${p.name}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${statusText(p)}</td>` +
+      `<td>${plantName}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${statusText(p)}</td>` +
       `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(nucUnemp(p))}</td><td class="c">${yn(nucCoal(p))}</td></tr>`;
   }).join("");
   const tn = document.getElementById("tableNotice");
@@ -728,6 +742,12 @@ document.getElementById("selOnlyBtn").addEventListener("click", () => {
 document.getElementById("selClearBtn").addEventListener("click", () => {
   selected.clear();
   showSelectedOnly = false;
+  buildTable();
+});
+document.getElementById("selFeaturedBtn").addEventListener("click", (e) => {
+  featuredOnly = !featuredOnly;
+  e.target.classList.toggle("active", featuredOnly);
+  e.target.textContent = featuredOnly ? "★ Showing featured" : "★ Featured list";
   buildTable();
 });
 

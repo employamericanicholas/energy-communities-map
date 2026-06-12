@@ -53,6 +53,10 @@ OWNER_OVERRIDE = {
     "South Texas Project Units 3 & 4": "Nuclear Innovation North America (NINA)",
     "TerraPower Natrium (Kemmerer Unit 1)": "TerraPower / PacifiCorp",
     "X-energy / Dow - Long Mott (Seadrift)": "X-energy / Dow (Long Mott Energy)",
+    "Rockport Plant": "American Electric Power (AEP)",
+    "Stewart County Site": "Southern Company",
+    "Salem Nuclear Power Plant": "PSEG Nuclear",
+    "Comanche Peak Nuclear Power Plant": "Vistra (Luminant)",
 }
 
 
