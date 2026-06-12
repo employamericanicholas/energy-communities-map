@@ -464,6 +464,7 @@ function nucPopup(p) {
   return `<h3>${p.name}</h3><div>${nucLabel(p)}</div>
     <div><span class="k">Owner:</span> ${p.owner || "—"}</div>
     ${p.county ? `<div><span class="k">Location:</span> ${p.county}, ${p.state}</div>` : ""}
+    ${p.loc_note ? `<div class="loc-note">&#9888; ${p.loc_note}</div>` : ""}
     ${p.dissolved ? `<div><span class="k">Closed:</span> ${String(p.dissolved).slice(0, 4)}</div>` : ""}
     <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(nucUnemp(p))}<span class="k">Coal:</span> ${yn(nucCoal(p))}</div>
     <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]}</div>`;
