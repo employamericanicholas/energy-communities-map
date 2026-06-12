@@ -627,6 +627,62 @@ document.getElementById("lyr_nuc_featured").addEventListener("change", async (e)
   NUC_CATS.forEach(refreshCatCheckbox);
 });
 
+/* ---------- Site assessment (Employ America company-site workbook) ----------
+   Self-contained overlay: 123 company sites mapped at county centroid, shown
+   as diamonds colored by energy type, with IRS eligibility per notice. */
+const ASSESS_COLORS = { Nuclear: "#1a9e1a", Geothermal: "#e8590c", Storage: "#2b6cb0", CCS: "#8e44ad", Other: "#777" };
+const assessIcons = {};
+function assessIcon(et) {
+  if (!assessIcons[et]) {
+    const c = ASSESS_COLORS[et] || "#777";
+    assessIcons[et] = L.divIcon({
+      className: "assess-diamond",
+      html: `<svg width="14" height="14"><polygon points="7,1 13,7 7,13 1,7" fill="${c}" stroke="#222" stroke-width="1.3"/></svg>`,
+      iconSize: [14, 14], iconAnchor: [7, 7],
+    });
+  }
+  return assessIcons[et];
+}
+function assessPopup(p) {
+  return `<h3>${p.name}</h3><div>${p.etype} &mdash; ${p.owner}</div>
+    <div><span class="k">Location:</span> ${p.county || "—"}, ${p.state}</div>
+    ${p.loc_note ? `<div class="loc-note">&#9888; ${p.loc_note}</div>` : ""}
+    <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(nucUnemp(p))}<span class="k">Coal:</span> ${yn(nucCoal(p))}</div>
+    <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]}</div>`;
+}
+let assessData = null, assessPromise = null;
+function loadAssessment() {
+  if (!assessPromise) {
+    load(true);
+    assessPromise = fetch("data/assessment_sites.geojson")
+      .then((r) => r.json())
+      .then((gj) => { assessData = gj; setCount("cnt_assess", gj.features.length); return gj; })
+      .finally(() => load(false));
+  }
+  return assessPromise;
+}
+const assessLayer = {
+  layer: null,
+  async show() {
+    const gj = await loadAssessment();
+    if (!gj) return;
+    if (!this.layer) {
+      this.layer = L.geoJSON(gj, {
+        pointToLayer: (f, ll) => L.marker(ll, { icon: assessIcon(f.properties.etype), pane: "nucPane" }),
+        onEachFeature: (f, l) => {
+          const p = f.properties;
+          l.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${p.etype} · ${p.owner}</span>`));
+          l.on("mouseout", hideHover);
+          l.bindPopup(() => assessPopup(p));
+        },
+      });
+    }
+    if (!map.hasLayer(this.layer)) this.layer.addTo(map);
+  },
+  hide() { if (this.layer && map.hasLayer(this.layer)) map.removeLayer(this.layer); },
+};
+bind("lyr_assess", assessLayer);
+
 /* Individual-plant picker: lazy-load on open, search, bulk All/None, per-plant toggle */
 const plantPicker = document.getElementById("plantPicker");
 plantPicker.addEventListener("toggle", async () => {
@@ -692,9 +748,14 @@ function buildTable() {
   const val = (p, k) => (k === "status" ? statusText(p).toLowerCase()
     : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
     : cell(p, k) ? 1 : 0);
-  let feats = [...nucData.features];
-  if (tableTab === "featured") feats = feats.filter((f) => f.properties.featured);
-  else if (tableTab === "fervo") feats = feats.filter((f) => f.properties.category === "fervo");
+  let feats;
+  if (tableTab === "assessment") {
+    feats = assessData ? [...assessData.features] : [];
+  } else {
+    feats = [...nucData.features];
+    if (tableTab === "featured") feats = feats.filter((f) => f.properties.featured);
+    else if (tableTab === "fervo") feats = feats.filter((f) => f.properties.category === "fervo");
+  }
   if (showSelectedOnly) feats = feats.filter((f) => selected.has(f.properties.name));
   feats.sort((a, b) => {
     const va = val(a.properties, tableSort.key), vb = val(b.properties, tableSort.key);
@@ -756,9 +817,10 @@ document.getElementById("selClearBtn").addEventListener("click", () => {
   buildTable();
 });
 document.querySelectorAll("#tableTabs button").forEach((btn) => {
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", async () => {
     tableTab = btn.dataset.tab;
     document.querySelectorAll("#tableTabs button").forEach((b) => b.classList.toggle("active", b === btn));
+    if (tableTab === "assessment") await loadAssessment();
     buildTable();
   });
 });
