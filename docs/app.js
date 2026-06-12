@@ -437,11 +437,18 @@ backBtn.addEventListener("click", backToAreas);
 document.body.appendChild(backBtn);
 
 /* ---------- Nuclear sites (per-plant visibility; categories = bulk toggles) ---------- */
-const NUC_COLORS = { operating: "#1a9e1a", former: "#999", esp_col: "#2b6cb0", advanced: "#8e44ad" };
-const NUC_CATS = ["operating", "former", "esp_col", "advanced"];
-const NUC_CAT_CB = { operating: "lyr_nuc_op", former: "lyr_nuc_former", esp_col: "lyr_nuc_esp_col", advanced: "lyr_nuc_advanced" };
-const NUC_CAT_CNT = { operating: "cnt_nuc_op", former: "cnt_nuc_former", esp_col: "cnt_nuc_esp_col", advanced: "cnt_nuc_advanced" };
-const NUC_CAT_LABEL = { operating: "Operating", former: "Former / shut down", esp_col: "ESP / COL sites", advanced: "Advanced reactors" };
+const NUC_COLORS = { operating: "#1a9e1a", former: "#999", esp_col: "#2b6cb0", advanced: "#8e44ad", fervo: "#d61f1f" };
+const NUC_CATS = ["operating", "former", "esp_col", "advanced", "fervo"];
+const NUC_CAT_CB = { operating: "lyr_nuc_op", former: "lyr_nuc_former", esp_col: "lyr_nuc_esp_col", advanced: "lyr_nuc_advanced", fervo: "lyr_nuc_fervo" };
+const NUC_CAT_CNT = { operating: "cnt_nuc_op", former: "cnt_nuc_former", esp_col: "cnt_nuc_esp_col", advanced: "cnt_nuc_advanced", fervo: "cnt_nuc_fervo" };
+const NUC_CAT_LABEL = { operating: "Operating", former: "Former / shut down", esp_col: "ESP / COL sites", advanced: "Advanced reactors", fervo: "Fervo Energy (geothermal)" };
+
+// Fervo geothermal sites render as a red triangle (divIcon) instead of a circle.
+const fervoIcon = L.divIcon({
+  className: "fervo-tri-icon",
+  html: '<svg width="16" height="14" viewBox="0 0 16 14"><polygon points="8,0 16,14 0,14" fill="#d61f1f" stroke="#222" stroke-width="1.5"/></svg>',
+  iconSize: [16, 14], iconAnchor: [8, 7],
+});
 
 const yn = (b) => (b ? '<span class="yes">&#10003;</span>' : '<span class="no">&#10007;</span>');
 
@@ -485,11 +492,13 @@ function loadNuclear() {
         gj.features.forEach((f) => {
           const p = f.properties;
           const [lng, lat] = f.geometry.coordinates;
-          const m = L.circleMarker([lat, lng], {
-            renderer: nucRenderer, pane: "nucPane",
-            radius: 6, weight: 1.5, color: "#222",
-            fillColor: NUC_COLORS[p.category] || "#1a9e1a", fillOpacity: 0.95,
-          });
+          const m = p.category === "fervo"
+            ? L.marker([lat, lng], { icon: fervoIcon, pane: "nucPane" })
+            : L.circleMarker([lat, lng], {
+                renderer: nucRenderer, pane: "nucPane",
+                radius: 6, weight: 1.5, color: "#222",
+                fillColor: NUC_COLORS[p.category] || "#1a9e1a", fillOpacity: 0.95,
+              });
           m.on("mouseover", () => showHover(`<b>${p.name}</b><span class="tag">${nucLabel(p)}</span>`));
           m.on("mouseout", hideHover);
           m.bindPopup(() => nucPopup(p));
@@ -658,7 +667,7 @@ let tableSort = { key: "name", asc: true };
 const MAX_SEL = 10;
 const selected = new Set();
 let showSelectedOnly = false;
-let featuredOnly = false;
+let tableTab = "all";   // "all" | "featured" | "fervo"
 const attr = (s) => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
 
 function updateSelUI() {
@@ -683,7 +692,8 @@ function buildTable() {
     : k === "name" || k === "owner" || k === "state" || k === "county" ? (p[k] || "").toLowerCase()
     : cell(p, k) ? 1 : 0);
   let feats = [...nucData.features];
-  if (featuredOnly) feats = feats.filter((f) => f.properties.featured);
+  if (tableTab === "featured") feats = feats.filter((f) => f.properties.featured);
+  else if (tableTab === "fervo") feats = feats.filter((f) => f.properties.category === "fervo");
   if (showSelectedOnly) feats = feats.filter((f) => selected.has(f.properties.name));
   feats.sort((a, b) => {
     const va = val(a.properties, tableSort.key), vb = val(b.properties, tableSort.key);
@@ -693,7 +703,7 @@ function buildTable() {
   tbody.innerHTML = feats.map((f) => {
     const p = f.properties;
     const chk = selected.has(p.name) ? " checked" : "";
-    const plantName = featuredOnly && p.featured_name ? p.featured_name : p.name;
+    const plantName = tableTab === "featured" && p.featured_name ? p.featured_name : p.name;
     return `<tr><td class="sel"><input type="checkbox" data-name="${attr(p.name)}"${chk}></td>` +
       `<td>${plantName}</td><td>${p.state || "—"}</td><td>${p.county || "—"}</td><td>${p.owner || "—"}</td><td>${statusText(p)}</td>` +
       `<td class="c">${yn(p.ffe)}</td><td class="c">${yn(nucUnemp(p))}</td><td class="c">${yn(nucCoal(p))}</td></tr>`;
@@ -744,11 +754,12 @@ document.getElementById("selClearBtn").addEventListener("click", () => {
   showSelectedOnly = false;
   buildTable();
 });
-document.getElementById("selFeaturedBtn").addEventListener("click", (e) => {
-  featuredOnly = !featuredOnly;
-  e.target.classList.toggle("active", featuredOnly);
-  e.target.textContent = featuredOnly ? "★ Showing featured" : "★ Featured list";
-  buildTable();
+document.querySelectorAll("#tableTabs button").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    tableTab = btn.dataset.tab;
+    document.querySelectorAll("#tableTabs button").forEach((b) => b.classList.toggle("active", b === btn));
+    buildTable();
+  });
 });
 
 document.querySelectorAll('input[name="msa"]').forEach((r) => {

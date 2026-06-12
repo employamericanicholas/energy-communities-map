@@ -57,6 +57,9 @@ OWNER_OVERRIDE = {
     "Stewart County Site": "Southern Company",
     "Salem Nuclear Power Plant": "PSEG Nuclear",
     "Comanche Peak Nuclear Power Plant": "Vistra (Luminant)",
+    "Cape Station": "Fervo Energy",
+    "Project Red": "Fervo Energy",
+    "Fervo Churchill County Project": "Fervo Energy",
 }
 
 

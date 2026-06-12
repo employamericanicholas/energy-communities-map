@@ -7,7 +7,7 @@
 <meta name="description" content="Interactive map of IRS Energy Community eligibility: coal closure census tracts, fossil fuel employment (FFE) counties, MSA/non-MSA boundaries (2010 & 2020 OMB vintages), U.S. counties, and nuclear power plant sites." />
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-<link rel="stylesheet" href="styles.css?v=20260611c" />
+<link rel="stylesheet" href="styles.css?v=20260612" />
 </head>
 <body>
 <div id="gate">
@@ -109,6 +109,10 @@
         <span class="swatch swatch-dot" style="background:#8e44ad"></span>
         Advanced / prospective reactor sites <span class="cnt" id="cnt_nuc_advanced"></span></label>
       <p class="note">Advanced-reactor demonstration projects (TerraPower Natrium, Kemmerer&nbsp;WY; X-energy/Dow Xe-100, Seadrift&nbsp;TX) plus prospective new-reactor candidate sites (AEP Rockport, IN; Southern Co. Stewart County, GA).</p>
+      <label class="layer"><input type="checkbox" id="lyr_nuc_fervo">
+        <span class="swatch swatch-tri"></span>
+        Fervo Energy geothermal sites <span class="cnt" id="cnt_nuc_fervo"></span></label>
+      <p class="note">Geothermal (EGS) sites from Fervo Energy&rsquo;s SEC Form S-1 (filed Apr&nbsp;2026): Cape Station (Beaver County,&nbsp;UT), Project Red (Humboldt County,&nbsp;NV), and a Churchill County,&nbsp;NV project. The S-1 gives specific locations only for these; the rest of Fervo&rsquo;s ~596k leased acres are not individually sited.</p>
       <label class="layer"><input type="checkbox" id="lyr_nuc_featured">
         <span class="swatch swatch-dot" style="background:#e8a400"></span>
         Featured sites (watchlist) <span class="cnt" id="cnt_nuc_featured"></span></label>
@@ -142,12 +146,16 @@
 <div id="tableModal" class="modal" aria-hidden="true">
   <div class="modal-box">
     <div class="modal-head">
-      <h2>Nuclear power plants &mdash; energy community eligibility</h2>
+      <h2>Power plants &amp; energy sites &mdash; energy community eligibility</h2>
       <button id="tableClose" aria-label="Close table">&times;</button>
+    </div>
+    <div id="tableTabs" class="table-tabs">
+      <button data-tab="all" class="active" type="button">All sites</button>
+      <button data-tab="featured" type="button">&#9733; Featured</button>
+      <button data-tab="fervo" type="button">&#9650; Fervo sites</button>
     </div>
     <p class="modal-note">A <span class="yes">&#10003;</span> means the plant&rsquo;s location falls inside the qualifying geography for that category. <strong>FFE</strong> = county meets the Fossil Fuel Employment threshold; <strong>FFE&nbsp;+&nbsp;Unemployment</strong> = currently-qualifying FFE energy community; <strong>Coal</strong> = within a coal closure census tract. Click a column header to sort. Showing eligibility for <strong id="tableNotice">Notice 2026-39</strong> &mdash; change the version in the Layers panel. Coal closures are cumulative.</p>
     <div class="table-toolbar">
-      <button id="selFeaturedBtn" type="button">&#9733; Featured list</button>
       <button id="selOnlyBtn" type="button" disabled>Show only selected</button>
       <button id="selClearBtn" type="button" disabled>Clear selection</button>
       <span id="selCount" class="sel-count">0 / 10 selected</span>
@@ -191,6 +199,6 @@
 </script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
   integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-<script src="app.js?v=20260611c"></script>
+<script src="app.js?v=20260612"></script>
 </body>
 </html>

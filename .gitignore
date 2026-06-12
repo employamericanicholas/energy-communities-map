@@ -10,3 +10,6 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+
+# Fervo S-1 source download (large)
+build/fervo_s1.htm
