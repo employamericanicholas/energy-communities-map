@@ -643,12 +643,23 @@ function assessIcon(et) {
   }
   return assessIcons[et];
 }
+function marginLine(p) {
+  const base = notice === "2639" ? p.margin_2639 : p.margin_2531;
+  const mc = notice === "2639" ? p.margin_2639_mc : p.margin_2531_mc;
+  if (base == null) return "";
+  const fmt = (v) => (v >= 0 ? "+" : "") + v.toFixed(2) + " pp";
+  let s = `<div class="margin"><span class="k">Unemployment margin vs national avg (EA est.):</span> <span class="${base >= 0 ? "yes" : "no"}">${fmt(base)}</span>`;
+  if (mc != null && Math.abs(mc - base) > 0.005) s += ` <span class="k">· incl. micro/CSA: <span class="${mc >= 0 ? "yes" : "no"}">${fmt(mc)}</span></span>`;
+  s += `</div>`;
+  return s;
+}
 function assessPopup(p) {
   return `<h3>${p.name}</h3><div>${p.etype} &mdash; ${p.owner}</div>
     <div><span class="k">Location:</span> ${p.county || "—"}, ${p.state}</div>
     ${p.loc_note ? `<div class="loc-note">&#9888; ${p.loc_note}</div>` : ""}
     <div class="elig"><span class="k">FFE:</span> ${yn(p.ffe)}<span class="k">FFE + Unemployment:</span> ${yn(nucUnemp(p))}<span class="k">Coal:</span> ${yn(nucCoal(p))}</div>
-    <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]}</div>`;
+    ${marginLine(p)}
+    <div><span class="k">Data:</span> ${NOTICE_LABEL[notice]} · positive margin = area unemployment at/above the national average</div>`;
 }
 let assessData = null, assessPromise = null;
 function loadAssessment() {

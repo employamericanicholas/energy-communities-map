@@ -83,6 +83,7 @@ html, body { margin: 0; height: 100%; font-family: -apple-system, BlinkMacSystem
 .pill { display:inline-block; padding:1px 7px; border-radius:10px; font-size:11px; color:#fff; }
 
 .leaflet-popup-content .loc-note { margin-top: 5px; color: #8a5a00; background: #fff7e6; padding: 5px 8px; border-radius: 5px; font-size: 12px; line-height: 1.35; }
+.leaflet-popup-content .margin { margin-top: 5px; font-size: 12.5px; line-height: 1.4; }
 .leaflet-popup-content .elig { margin-top: 6px; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; }
 .yes { color: #1f8a70; font-weight: 700; }
 .no { color: #c0392b; font-weight: 700; }
