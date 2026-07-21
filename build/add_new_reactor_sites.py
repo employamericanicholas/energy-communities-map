@@ -42,6 +42,8 @@ SITES = [
     # --- Advanced reactor demonstration sites ---
     ("TerraPower Natrium (Kemmerer Unit 1)", "advanced", "Construction permit (2026)", -110.56056, 41.70583),
     ("X-energy / Dow - Long Mott (Seadrift)", "advanced", "CP application (2025)", -96.7745, 28.5033),
+    # Prospective advanced-reactor site; coordinates provided directly.
+    ("Elementl Power Ohio Project", "advanced", "Prospective advanced-reactor site", -81.91597, 38.89858),
 ]
 
 

@@ -60,6 +60,7 @@ OWNER_OVERRIDE = {
     "Cape Station": "Fervo Energy",
     "Project Red": "Fervo Energy",
     "Fervo Churchill County Project": "Fervo Energy",
+    "Elementl Power Ohio Project": "Elementl Power",
 }
 
 
