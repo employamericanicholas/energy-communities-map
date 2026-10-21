@@ -4,10 +4,16 @@
 const map = L.map("map", { preferCanvas: true, minZoom: 3, maxZoom: 12 })
   .setView([39.5, -98.5], 4);
 
-L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
-  attribution:
-    '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a> | Boundaries: U.S. Census Bureau | Eligibility: IRS Notice 2026-39 / 2025-31',
-  subdomains: "abcd", maxZoom: 19,
+/* Basemap: Esri World Light Gray Canvas (light-gray base + reference labels).
+   Replaces CARTO's free raster basemaps, which were retired in 2026 and now
+   return a blank placeholder tile. No API key required. */
+const basemapAttr =
+  'Tiles &copy; <a href="https://www.esri.com/">Esri</a> &mdash; Esri, HERE, Garmin, FAO, NOAA, USGS, &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors | Boundaries: U.S. Census Bureau | Eligibility: IRS Notice 2026-39 / 2025-31';
+L.tileLayer("https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+  attribution: basemapAttr, maxZoom: 16,
+}).addTo(map);
+L.tileLayer("https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Reference/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 16,
 }).addTo(map);
 
 const COAL_COLORS = {
