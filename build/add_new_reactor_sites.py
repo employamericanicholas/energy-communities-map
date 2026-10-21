@@ -44,6 +44,7 @@ SITES = [
     ("X-energy / Dow - Long Mott (Seadrift)", "advanced", "CP application (2025)", -96.7745, 28.5033),
     # Prospective advanced-reactor site; coordinates provided directly.
     ("Elementl Power Ohio Project", "advanced", "Prospective advanced-reactor site", -81.91597, 38.89858),
+    ("Prosperity One", "advanced", "Prospective AP1000 campus (The Nuclear Company, 2026)", -83.43083, 38.65794),
 ]
 
 

@@ -61,6 +61,7 @@ OWNER_OVERRIDE = {
     "Project Red": "Fervo Energy",
     "Fervo Churchill County Project": "Fervo Energy",
     "Elementl Power Ohio Project": "Elementl Power",
+    "Prosperity One": "The Nuclear Company",
 }
 
 
